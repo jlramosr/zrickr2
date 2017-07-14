@@ -1,0 +1,91 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/firebase.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+
+<dom-module id="zr-backend-connection">
+
+  <template>
+
+    <firebase-app
+      name="rmerp"
+      auth-domain="rmerp-19591.firebaseapp.com"
+      database-url="https://rmerp-19591.firebaseio.com"
+      api-key="AIzaSyDgZxxPgit5IE1YPQwAKgF84ARH3egnoKg"></firebase-app>
+
+    <firebase-auth
+      id="auth"
+      app-name="rmerp"
+      user="{{_user}}"
+      provider="{{provider}}"
+      on-error="_handleError"
+      status-known="{{userStatusKnown}}"
+      signed-in="{{signedIn}}"></firebase-auth>
+
+  </template>
+
+  <script>
+
+    class ZRBackendConnection extends Polymer.Element {
+
+      static get is() { return 'zr-backend-connection'; }
+
+      static get properties() {
+        return {
+
+          _user: Object,
+          
+          user: {
+            type: Object,
+            notify: true,
+            computed: '_computeUser(_user)'
+          },
+
+          userStatusKnown: {
+            type: Boolean,
+            notify: true
+          },
+
+          provider: {
+            type: String,
+            value: 'password'
+          }
+
+        }
+      }
+
+      login(account) {
+        if (account.provider == '' || account.provider == 'password') {
+          return this.$.auth.signInWithEmailAndPassword(account.email, account.password);
+        }
+        return this.$.auth.signInWithPopup(account.provider);
+      }
+
+      logout() {
+        return this.$.auth.signOut();
+      }
+
+      _handleError(event) {
+        console.error(event.detail.message);
+      }
+
+      _computeUser(_user) {
+        if (!_user) { return null; }
+        const userProviderData = _user.providerData[0];
+        return {
+          name: userProviderData.displayName,
+          email: userProviderData.email,
+          photo: userProviderData.photoURL,
+          uid: userProviderData.uid
+        };
+      }
+
+    }
+
+    window.customElements.define(ZRBackendConnection.is, ZRBackendConnection);
+
+  </script>
+</dom-module>
+
+

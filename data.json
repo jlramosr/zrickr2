@@ -1,0 +1,60 @@
+{
+  "101309302582172320804" : {
+    "clients" : {
+      "-KfH53O-33l9J6kjbvP8" : {
+        "individual" : true,
+        "name" : "123"
+      },
+      "-KfH5jnNVgeom4qlOOu0" : {
+        "individual" : true,
+        "name" : "1241266"
+      },
+      "-KfH5lJVKCf4yFbGNEdN" : {
+        "individual" : true,
+        "name" : "asdf"
+      },
+      "-KfH6cTlwiG9sMuXtPF1" : {
+        "individual" : true,
+        "name" : "1234"
+      },
+      "-KfH9seJdCSPnD0tE859" : {
+        "individual" : true,
+        "name" : "3213213"
+      },
+      "-KfHUwd3CUqbo6zfVoQ2" : {
+        "individual" : true,
+        "name" : "sadasdasd"
+      },
+      "-KfHirp0B57B99I-JGyS" : {
+        "individual" : true,
+        "name" : "123213213"
+      },
+      "-KfHirp0B57B99I-JGT2" : {
+        "individual" : true,
+        "name" : "123213213"
+      },
+      "-KfHirp0B57B99I-JGg5" : {
+        "individual" : true,
+        "name" : "123213213"
+      },
+      "-KfHirp0B57B99I-JGq1" : {
+        "individual" : true,
+        "name" : "123213213"
+      }
+    },
+    "invoices" : {
+      "-KfH53O-33l9J6kjbvP8" : {
+        "individual" : true,
+        "name" : "123"
+      },
+      "-KfH5jnNVgeom4qlOOu0" : {
+        "individual" : true,
+        "name" : "1241266"
+      },
+      "-KfH5lJVKCf4yFbGNEdN" : {
+        "individual" : true,
+        "name" : "asdf"
+      }
+    }
+  }
+}

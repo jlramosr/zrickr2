@@ -1,0 +1,253 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="zr-icons.html">
+<link rel="import" href="zr-common.html">
+<link rel="import" href="zr-backend-connection.html">
+<link rel="import" href="zr-styles.html">
+
+<dom-module id="zr-shell">
+  <template>
+    <style include="toast-styles"></style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route route="[[route]]"></app-route>
+
+    <iron-media-query query="max-width: 720px" query-matches="{{smallScreen}}"></iron-media-query>
+    <iron-media-query query="max-width: 1024px" query-matches="{{mediumScreen}}"></iron-media-query>
+
+    <zr-backend-connection
+      id="backendConnection"
+      user="{{user}}"
+      user-status-known="{{userStatusKnown}}"></zr-backend-connection>
+
+    <paper-toast id="toast" vertical-align="bottom" horizontal-align="right" raised duration="5000">
+      <paper-icon-button icon="zr-icons:close" class="toast__icon" on-click="_closeToast"></paper-icon-button>
+    </paper-toast>
+
+    <div id="content"></div>
+
+  </template>
+
+  <script>
+    class ZRShell extends Polymer.Element {
+
+      static get is() { return 'zr-shell'; }
+
+      static get properties() {
+        return {
+
+          _currentElement: Object,
+
+          appName: String,
+
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+
+          userStatusKnown: Boolean,
+
+          route: {
+            type: Object,
+            observer: '_routeChanged'
+          },
+
+          smallScreen: {
+            type: Boolean,
+            observer: '_smallScreenChanged'
+          },
+
+          mediumScreen: {
+            type: Boolean,
+            observer: '_mediumScreenChanged'
+          }  
+
+        };
+      }
+
+      static get observers() {
+        return [
+          '_userStatusKnownChanged(user, userStatusKnown)'
+        ];
+      }
+
+      constructor() {
+        super();
+        this._showToast = this._showToast.bind(this);
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this._toggleListeners({enable: true});
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._toggleListeners({enable: false});
+      }
+
+      _toggleListeners({enable}) {
+        const m = enable ? 'addEventListener' : 'removeEventListener';
+        document[m]('show-message', this._showToast);
+      }
+
+      _prepareElement(page) {
+        if (this._currentElement) {
+          this._currentElement.remove();
+          this._currentElement = null;
+        }
+
+        this._currentElement = document.createElement('zr-' + page);
+
+        // common properties.
+        this._currentElement.appName = this.appName;
+        this._currentElement.route = this.route;
+        this._currentElement.user = this.user;
+        this._currentElement.smallScreen = this.smallScreen;
+        this._currentElement.mediumScreen = this.mediumScreen;
+      }
+
+      _appendElement(page) {
+        this.$.content.appendChild(this._currentElement);
+        const href = this.resolveUrl('zr-' + page + '.html');
+        Polymer.importHref(href, null, null, true);
+      }
+
+      _appendAppElement() {
+        this._prepareElement('app');
+
+        // local properties.
+        this._currentElement.defaultCategory = 'dashboard';
+
+        this._appendElement('app');
+
+        // local listeners.
+        this._currentElement.addEventListener('logout-tapped', event => {
+          this.$.backendConnection.logout().
+            then(response => {
+              ZRCommon.updateWindowLocation('/account');
+              ZRCommon.showMessage('LOGOUT CORRECTO uid=' + response.uid + '.', 'success');
+            }).
+            catch(response => {
+              ZRCommon.showMessage(response.message, 'error');
+            });
+        });
+
+      }
+
+      _appendGuestElement() {
+        this._prepareElement('account');
+
+        // local properties.
+
+        this._appendElement('account');
+
+        // local listeners.
+        this._currentElement.addEventListener('login-tapped', event => {
+          this.$.backendConnection.login(event.detail.account).
+            then(response => {
+              ZRCommon.updateWindowLocation('/');
+              ZRCommon.showMessage('LOGIN CORRECTO uid=' + response.uid + '.', 'success');
+            }).
+            catch(response => {
+              ZRCommon.showMessage(response.message, 'error');
+            });
+        });
+
+      }
+
+      _appendErrorElement() {
+        this._prepareElement('404-warning');
+        this._appendElement('404-warning');
+      }
+
+      _userStatusKnownChanged(user, userStatusKnown) {
+        if (!userStatusKnown) { return; }
+
+        // app page load if there is user log in
+        if (user) {
+          this._appendAppElement();
+          return;
+        }
+
+        const possibleLogoutPaths = [
+          '', 'dashboard', 'clients', 'invoices', 'account'
+        ];
+
+        var path = this.route.path.split('/');
+        var mainPage = path[1];
+        var restPath = path[2];
+
+        // error page load.
+        if (!possibleLogoutPaths.includes(mainPage)) {
+          this._appendErrorElement();
+          return;
+        }
+
+        // redirect to login if there is no main page or there is long account route.
+        if ((restPath && possibleLogoutPaths.includes(mainPage)) ||
+            (possibleLogoutPaths.includes(mainPage)) && mainPage != 'account') {
+          ZRCommon.updateWindowLocation('/account');
+        }
+
+        // guest page load.
+        this._appendGuestElement();
+
+      }
+
+      _routeChanged(route) {
+        // databinding.
+        if (this._currentElement) {
+          this._currentElement.route = route;
+        }
+      }
+
+      _userChanged(user) {
+        // databinding.
+        if (this._currentElement) {
+          this._currentElement.user = user;
+        }
+      }
+
+      _smallScreenChanged(smallScreen) {
+        // databinding.
+        if (this._currentElement) {
+          this._currentElement.smallScreen = smallScreen;
+        }
+      }
+
+      _mediumScreenChanged(mediumScreen) {
+        // databinding.
+        if (this._currentElement) {
+          this._currentElement.mediumScreen = mediumScreen;
+        }
+      }
+
+      _showToast(event) {
+        const toast = this.shadowRoot.querySelector('paper-toast');
+        const message = event.detail.message;
+        const type = event.detail.type;
+        if (toast) {
+          if (toast.opened) toast.close();
+          if (type == 'error') toast.className = 'toast--error';
+          else if (type == 'warning') toast.className = 'toast--warning';
+          else if (type == 'success') toast.className = 'toast--success';
+          else toast.className = 'toast--info';
+          toast.text = message;
+          toast.open();
+        }
+      }
+
+      _closeToast() {
+        this.$.toast.close();
+      }
+
+    }
+
+    window.customElements.define(ZRShell.is, ZRShell);
+  </script>
+</dom-module>
