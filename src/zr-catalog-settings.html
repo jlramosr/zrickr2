@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="zr-catalog-settings">
+  <template>
+    <style include="">
+      :host {
+        display: block;
+        height: 100vh;
+        background: #fefefe;
+      }
+    </style>
+
+    catalog-settings
+
+  </template>
+
+  <script>
+
+    class ZRCatalogSettings extends Polymer.Element {
+
+      static get is() { return 'zr-catalog-settings'; }
+
+      static get properties() {
+        return {
+
+          appName: String,
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+  
+        }
+      }
+
+    }
+
+    window.customElements.define(ZRCatalogSettings.is, ZRCatalogSettings);
+
+  </script>
+</dom-module>

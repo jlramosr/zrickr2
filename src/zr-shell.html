@@ -1,17 +1,21 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<link rel="import" href="zr-icons.html">
 <link rel="import" href="zr-common.html">
 <link rel="import" href="zr-backend-connection.html">
 <link rel="import" href="zr-styles.html">
 
 <dom-module id="zr-shell">
   <template>
-    <style include="toast-styles"></style>
+
+    <style include="toast-styles spinner-styles show-styles"></style>
+
+    <paper-spinner-lite class="spinner--big" active="[[!loadComplete]]"></paper-spinner-lite>
+    <span class="spinner__text" hidden$="[[loadComplete]]">Loading<br>[[appName]]</span>
 
     <app-location route="{{route}}"></app-location>
     <app-route route="[[route]]"></app-route>
@@ -51,6 +55,11 @@
 
           userStatusKnown: Boolean,
 
+          loadComplete: {
+            type: Boolean,
+            value: false
+          },
+
           route: {
             type: Object,
             observer: '_routeChanged'
@@ -64,7 +73,7 @@
           mediumScreen: {
             type: Boolean,
             observer: '_mediumScreenChanged'
-          }  
+          }
 
         };
       }
@@ -114,19 +123,19 @@
       _appendElement(page) {
         this.$.content.appendChild(this._currentElement);
         const href = this.resolveUrl('zr-' + page + '.html');
-        Polymer.importHref(href, null, null, true);
+        Polymer.importHref(href, this._pageLoaded.bind(this), null, true);
       }
 
       _appendAppElement() {
         this._prepareElement('app');
 
         // local properties.
-        this._currentElement.defaultCategory = 'dashboard';
+        this._currentElement.defaultPage = 'dashboard';
 
         this._appendElement('app');
 
         // local listeners.
-        this._currentElement.addEventListener('logout-tapped', event => {
+        document.addEventListener('logout-tapped', event => {
           this.$.backendConnection.logout().
             then(response => {
               ZRCommon.updateWindowLocation('/account');
@@ -140,14 +149,15 @@
       }
 
       _appendGuestElement() {
-        this._prepareElement('account');
-
+        this._prepareElement('guest');
+        
         // local properties.
+        this._currentElement.defaultPage = 'product';
 
-        this._appendElement('account');
+        this._appendElement('guest');
 
         // local listeners.
-        this._currentElement.addEventListener('login-tapped', event => {
+        document.addEventListener('login-tapped', event => {
           this.$.backendConnection.login(event.detail.account).
             then(response => {
               ZRCommon.updateWindowLocation('/');
@@ -160,43 +170,17 @@
 
       }
 
-      _appendErrorElement() {
-        this._prepareElement('404-warning');
-        this._appendElement('404-warning');
-      }
-
       _userStatusKnownChanged(user, userStatusKnown) {
         if (!userStatusKnown) { return; }
 
-        // app page load if there is user log in
+        // app page load if there is user is log in
         if (user) {
           this._appendAppElement();
           return;
         }
 
-        const possibleLogoutPaths = [
-          '', 'dashboard', 'clients', 'invoices', 'account'
-        ];
-
-        var path = this.route.path.split('/');
-        var mainPage = path[1];
-        var restPath = path[2];
-
-        // error page load.
-        if (!possibleLogoutPaths.includes(mainPage)) {
-          this._appendErrorElement();
-          return;
-        }
-
-        // redirect to login if there is no main page or there is long account route.
-        if ((restPath && possibleLogoutPaths.includes(mainPage)) ||
-            (possibleLogoutPaths.includes(mainPage)) && mainPage != 'account') {
-          ZRCommon.updateWindowLocation('/account');
-        }
-
-        // guest page load.
+        //user is log out. guest page load.
         this._appendGuestElement();
-
       }
 
       _routeChanged(route) {
@@ -224,6 +208,22 @@
         // databinding.
         if (this._currentElement) {
           this._currentElement.mediumScreen = mediumScreen;
+        }
+      }
+
+      _pageLoaded() {
+        // load lazy resources after render and set `loadComplete` when done.
+        if (!this.loadComplete) {
+          Polymer.RenderStatus.afterNextRender(this._currentElement, () => {
+            console.log("RENDERIZADO CURRENTELEMENT (APP O GUEST)", this._currentElement);
+            Polymer.importHref(this.resolveUrl('lazy-resources.html'), () => {
+              // Register service worker if supported.
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js', {scope: '/'});
+              }
+              this.loadComplete = true;
+            });
+          });
         }
       }
 

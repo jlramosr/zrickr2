@@ -1,0 +1,155 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+
+<dom-module id="zr-backend-data">
+
+  <template>
+
+    <firebase-document
+      id="query"
+      app-name="zrickr2"
+      path="/[[userId]]/[[collectionId]]"
+      data="{{itemsDataObject}}"></firebase-document>
+
+    <firebase-document
+      id="document"
+      app-name="zrickr2"
+      path="/[[userId]]/[[collectionId]]/[[itemId]]"
+      data="{{itemDataObject}}"></firebase-document>
+
+  </template>
+
+  <script>
+
+    class ZRBackendData extends Polymer.Element {
+
+      static get is() { return 'zr-backend-data'; }
+
+      static get properties() {
+        return {
+
+          userId: String,
+
+          collectionId: String,
+
+          itemsDataObject: Object,
+
+          items: {
+            type: Array,
+            notify: true,
+            computed: '_computeItems(itemsDataObject)',
+            observer: '_itemsChanged',
+          },
+
+          itemId: String,
+
+          itemDataObject: Object,
+
+          item: {
+            type: Object,
+            notify: true,
+            computed: '_computeItem(itemDataObject, itemId)',
+            observer: '_itemChanged',
+          },
+
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
+          }
+
+        }
+      }
+
+      create(item) {
+        let _document = this.$.document;
+        this.itemDataObject = item;
+        return new Promise((resolve, reject) => {
+          _document.save(this.userId + '/' + this.collection) //second parameter null generates random id.
+            .then(_ => { 
+              // Success Save (add automatically /itemId to path element).
+              let itemId = _document.path.split('/')[3];
+              resolve(itemId);
+            })
+            .catch(error => {
+              // Failure Save.
+              console.error(error, item);
+              reject(error);
+            });
+        });
+      }
+
+      update(item) {
+        let _document = this.$.document;
+        this.itemDataObject = item;
+        return new Promise((resolve, reject) => {
+          _document.save(this.userId + '/' + this.collection, item.id)
+            .then(_ => { 
+              // Success Save.
+              resolve(item.id);      
+            })
+            .catch(error => { 
+              // Failure Save.
+              console.error(error, item);
+              reject(item.id, error);
+            });
+        });
+      }
+
+      delete(itemId) {
+        let _document = this.$.document;
+        this.itemDataObject = null;
+        return new Promise((resolve, reject) => {
+          _document.save(this.userId + '/' + this.collection, itemId)
+            .then(_ => { 
+              // Success Delete.
+              resolve();
+              // Important step (with / at the end) to update path and delete itemId at the end.
+              // this.itemId doesn't change because route doesn't change either and it continues being null.
+              _document.path = this.userId + '/' + this.collection + '/';
+            })
+            .catch(error => { 
+              // Failure Delete.
+              console.error(error, item);
+              reject(error);
+              _document.path = this.userId + '/' + this.collection + '/';
+            });
+        });
+      }
+
+      _computeItems(itemsDataObject) {
+        this.loading = true;
+        return Object.keys(itemsDataObject).map(function(key) {
+          var object = itemsDataObject[key];
+          object.id = key;
+          return object;   
+        });
+      }
+
+      _itemsChanged(items, oldItems) {
+        if (oldItems) {
+          this.loading = false;
+        }
+      }
+
+      _computeItem(itemDataObject, itemId) {
+        if (!itemDataObject || Object.keys(itemDataObject).length === 0 || !itemId) return null;
+        this.loading = true;
+        itemDataObject.id = itemId;
+        return itemDataObject;
+      }
+
+      _itemChanged(item, oldItem) {
+        if (oldItem !== undefined) {
+          this.loading = false;
+        }
+      }
+
+    }
+
+    window.customElements.define(ZRBackendData.is, ZRBackendData);
+
+  </script>
+</dom-module>
+
+

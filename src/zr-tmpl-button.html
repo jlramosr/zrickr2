@@ -1,0 +1,61 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="zr-styles.html">
+<link rel="lazy-import" href="zr-tmpl-button.html">
+
+<dom-module id="zr-tmpl-button">
+  <template>
+
+    <style include="button-styles show-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <template is="dom-if" if="[[small]]">
+      <a href$="[[href]]" hidden$="[[!href]]">
+        <paper-icon-button class="button--icon" icon$="zr-app-icons:[[icon]]"></paper-icon-button>
+      </a>
+      <paper-icon-button class="button--icon" icon$="zr-app-icons:[[icon]]" hidden$="[[href]]"></paper-icon-button>
+    </template>
+
+    <template is="dom-if" if="[[!small]]">
+      <a href$="[[href]]" hidden$="[[!href]]">
+        <button class="button--text">[[label]]</button>
+      </a>
+      <button class="button--text" hidden$="[[href]]">[[label]]</button>
+    </template>
+
+  </template>
+
+  <script>
+
+    class ZRTmplButton extends Polymer.Element {
+
+      static get is() { return 'zr-tmpl-button'; }
+
+      static get properties() {
+        return {
+
+          label: String,
+
+          icon: String,
+
+          href: {
+            type: String,
+            value: null
+          },
+
+          small: Boolean
+        
+        }
+      
+      }
+
+    }
+
+    window.customElements.define(ZRTmplButton.is, ZRTmplButton);
+
+  </script>
+</dom-module>

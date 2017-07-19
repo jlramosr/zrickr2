@@ -1,0 +1,94 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+
+<link rel="import" href="zr-tmpl-page-layout.html">
+<link rel="import" href="zr-common.html">
+<link rel="import" href="zr-styles.html">
+
+<dom-module id="zr-dashboard">
+  <template>
+
+    <style include="content-styles list-styles"></style>
+
+    <zr-tmpl-page-layout menu title="[[appName]]" loading="{{loading}}">
+
+      <zr-tmpl-button
+        slot="action"
+        label="NEW COLLECTION"
+        icon="add"
+        on-click="_newCollectionTapped"
+        small="[[smallScreen]]"></zr-tmpl-button>
+        
+      <zr-tmpl-button
+        slot="action"
+        label="NEW COLLECTION"
+        icon="add"
+        on-click="_newCollectionTapped"
+        small="[[smallScreen]]"></zr-tmpl-button>
+
+      <div id="content" slot="content" class="content__list">
+
+        <iron-list id="ironList" items="[[_computeUserCollections(data)]]" class="list" as="collection">
+          <template>
+            <div class="table__item-container">
+              <a class$="table__item [[_computeItemClass(index, collections.length)]]" href="/catalog/[[collection.id]]">
+                <div class="table__item__detail">
+                  <span class="table__item--primary-text">[[collection.label]]</span>
+                  <span class="table__item--secondary-text">[[collection.description]]</span>
+                </div>
+              </a>
+            </div>
+          </template>
+        </iron-list>
+
+      </div>
+
+    </zr-tmpl-page-layout>
+
+  </template>
+
+  <script>
+
+    class ZRDashboard extends Polymer.Element {
+
+      static get is() { return 'zr-dashboard'; }
+
+      static get properties() {
+        return {
+
+          appName: String,
+
+          data: Object,
+
+          loading: Boolean,
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+  
+        }
+      }
+
+      _computeUserCollections(data) {
+        if (!data) {
+          this.loading = true;
+          return null;
+        }
+        window.setTimeout(_ => {
+          this.loading = false;
+        }, 300);
+        return ZRCommon.objectsToArray(data.collections);
+      }
+
+      _computeItemClass() {
+        window.setTimeout(_ => {
+          this.$.ironList.notifyResize();
+        });
+      }
+
+    }
+
+    window.customElements.define(ZRDashboard.is, ZRDashboard);
+
+  </script>
+</dom-module>

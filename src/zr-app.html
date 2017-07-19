@@ -1,0 +1,201 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="zr-backend-data.html">
+
+<link rel="lazy-import" href="zr-dashboard.html">
+<link rel="lazy-import" href="zr-profile.html">
+<link rel="lazy-import" href="zr-catalog.html">
+<link rel="lazy-import" href="zr-404.html">
+
+<dom-module id="zr-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      app-header-layout {
+        position: relative;
+      }
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:page"
+      tail="{{subroute}}"></app-route>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer" slot="drawer">
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[_page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="home" href="dashboard">Home</a>
+          <a name="profile" href="account">Profile</a>
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout>
+
+        <!--<app-header slot="header" condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="zr-app-icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>[[appName]]</div>
+          </app-toolbar>
+        </app-header>-->
+
+        <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="404">
+
+          <zr-dashboard
+            name="dashboard"
+            app-name="[[appName]]"
+            user="[[user]]"
+            data="[[data]]"
+            small-screen="[[smallScreen]]"
+            medium-screen="[[mediumScreen]]"></zr-dashboard>
+
+          <zr-profile
+            name="profile"
+            user="[[user]]"
+            data="[[data]]"
+            small-screen="[[smallScreen]]"
+            medium-screen="[[mediumScreen]]"></zr-profile>
+
+          <zr-catalog
+            name="catalog"
+            default-action="list"
+            user="[[user]]"
+            data="[[data]]"
+            route="[[subroute]]"
+            small-screen="[[smallScreen]]"
+            medium-screen="[[mediumScreen]]"></zr-catalog>
+
+          <zr-404
+            name="404"
+            message="Page Not Found"
+            small-screen="[[smallScreen]]"
+            medium-screen="[[mediumScreen]]"></zr-404>
+
+        </iron-pages>
+
+      </app-header-layout>
+    </app-drawer-layout>
+
+    <zr-backend-data
+      id="backend"
+      path="[[_getDatabasePath(user.uid)]]"
+      document="{{data}}"></zr-backend-data>
+
+  </template>
+
+  <script>
+    class ZRApp extends Polymer.Element {
+
+      static get is() { return 'zr-app'; }
+
+      static get properties() {
+        return {
+
+          defaultPage: String,
+
+          appName: String,
+
+          user: Object,
+
+          data: Object,
+
+          _page: {
+            type: String,
+            observer: '_pageChanged'
+          },
+
+          route: {
+            type: Object,
+            observer: '_routeChanged'
+          },
+
+          subroute: Object,
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+
+        };
+      }
+
+      _getDatabasePath(userUid) {
+        return '/' + userUid;
+      }
+
+      _routeChanged(route) {
+        if (route.path == "undefined") { return; }
+
+        const path = route.path.split('/');
+        var page = path[1];
+        const restPath = path[2] ? path[2].split('/') : null;
+
+        // redirect removing rest path.
+        if (restPath && page !== 'catalog') {
+          ZRCommon.updateWindowLocation('/' + page);
+          return;
+        }
+        
+        if (page == 'account') {
+          page = 'profile';
+        }
+
+        // redirect to defaultPage if there is no page.
+        if (!page || page === '') {
+          ZRCommon.updateWindowLocation('/' + this.defaultPage);
+          return;
+        }
+
+        // update page.
+        this._page = page;
+      }
+
+      _pageChanged(_page) {
+        // Load page import on demand
+        var resolvedPageUrl = this.resolveUrl('zr-' + _page + '.html');
+        Polymer.importHref(resolvedPageUrl, null, null, true);
+      }
+
+    }
+
+    window.customElements.define(ZRApp.is, ZRApp);
+
+  </script>
+</dom-module>
+

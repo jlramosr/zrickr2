@@ -1,0 +1,109 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+
+<link rel="lazy-import" href="zr-product.html">
+<link rel="lazy-import" href="zr-login.html">
+<link rel="lazy-import" href="zr-404.html">
+
+<dom-module id="zr-guest">
+  <template>
+    
+    <app-route
+      route="{{route}}"
+      pattern="/:page"
+      tail="{{subroute}}"></app-route>
+
+    <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="404">
+
+      <zr-product
+        name="product"
+        app-name="[[appName]]"
+        small-screen="[[smallScreen]]"
+        medium-screen="[[mediumScreen]]"></zr-product>
+
+      <zr-login
+        name="login"
+        app-name="[[appName]]"
+        small-screen="[[smallScreen]]"
+        medium-screen="[[mediumScreen]]"></zr-login>
+
+      <zr-404
+        name="404"
+        message="Page Not Found"
+        small-screen="[[smallScreen]]"
+        medium-screen="[[mediumScreen]]"></zr-404>
+
+    </iron-pages>
+  
+  </template>
+
+  <script>
+    class ZRGuest extends Polymer.Element {
+
+      static get is() { return 'zr-guest'; }
+
+      static get properties() {
+        return {
+
+          defaultPage: String,
+
+          _page: {
+            type: String,
+            observer: '_pageChanged'
+          },
+
+          route: {
+            type: Object,
+            observer: '_routeChanged'
+          },
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+
+        };
+      }
+
+      _routeChanged(route) {
+        if (route.path == "undefined") { return; }
+
+        const path = route.path.split('/');
+        var page = path[1];
+        const restPath = path[2];
+        
+        const possibleGuestPages = ['', 'dashboard', 'product', 'account'];
+
+        // error page load.
+        if (!possibleGuestPages.includes(page)) {
+          this._page = '404';
+          return;
+        }
+        
+        if (page == 'account') {
+          page = 'login';
+        }
+
+        // redirect to defaultPage if there is no page.
+        if (restPath || page === '') {
+          ZRCommon.updateWindowLocation('/' + this.defaultPage);
+          page = this.defaultPage;
+        }
+
+        // update page.
+        this._page = page || '';
+      }
+
+      _pageChanged(_page) {
+        // Load page import on demand
+        var resolvedPageUrl = this.resolveUrl('zr-' + _page + '.html');
+        Polymer.importHref(resolvedPageUrl, null, null, true);
+      }
+
+    }
+
+    window.customElements.define(ZRGuest.is, ZRGuest);
+
+  </script>
+</dom-module>
+

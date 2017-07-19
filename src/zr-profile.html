@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="zr-profile">
+  <template>
+    <style include="">
+      :host {
+        display: block;
+        height: 100vh;
+        background: #fefefe;
+      }
+    </style>
+
+    profile [[user.email]]
+
+  </template>
+
+  <script>
+
+    class ZRProfile extends Polymer.Element {
+
+      static get is() { return 'zr-profile'; }
+
+      static get properties() {
+        return {
+
+          user: Object,
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+  
+        }
+      }
+
+    }
+
+    window.customElements.define(ZRProfile.is, ZRProfile);
+
+  </script>
+</dom-module>

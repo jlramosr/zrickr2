@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="zr-product">
+  <template>
+    <style include="">
+      :host {
+        display: block;
+        height: 100vh;
+        background: #fefefe;
+      }
+    </style>
+
+    product
+
+  </template>
+
+  <script>
+
+    class ZRProduct extends Polymer.Element {
+
+      static get is() { return 'zr-product'; }
+
+      static get properties() {
+        return {
+
+          appName: String,
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+  
+        }
+      }
+
+    }
+
+    window.customElements.define(ZRProduct.is, ZRProduct);
+
+  </script>
+</dom-module>

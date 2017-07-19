@@ -5,34 +5,34 @@
 <style is="custom-style">
   :root {
     /* colors */
-    --rmerp-primary-dark-color: var(--paper-blue-grey-800);
-    --rmerp-primary-color: var(--paper-blue-grey-700);
-    --rmerp-primary-soft-color: var(--paper-blue-grey-500);
-    --rmerp-primary-light-color: var(--paper-blue-grey-200);
-    --rmerp-secondary-color: #DD6F00;
-    --rmerp-accent-color: #FFDFCC;
-    --rmerp-error-color: var(--paper-red-900);
-    --rmerp-background-color: #f2f2f2;
+    --zr-primary-dark-color: var(--paper-blue-grey-800);
+    --zr-primary-color: var(--paper-blue-grey-700);
+    --zr-primary-soft-color: var(--paper-blue-grey-500);
+    --zr-primary-light-color: var(--paper-blue-grey-200);
+    --zr-secondary-color: #DD6F00;
+    --zr-accent-color: #FFDFCC;
+    --zr-error-color: var(--paper-red-900);
+    --zr-background-color: #f2f2f2;
 
-    --rmerp-responsive-small: 720px;
-    --rmerp-responsive-medium: 1024px;
+    --zr-responsive-small: 720px;
+    --zr-responsive-medium: 1024px;
 
-    --rmerp-drawer-toolbar-height: 100px;
-    --rmerp-primary-toolbar-height: 50px;
-    --rmerp-secondary-toolbar-height: 50px;
+    --zr-drawer-toolbar-height: 100px;
+    --zr-primary-toolbar-height: 50px;
+    --zr-secondary-toolbar-height: 50px;
 
-    --rmerp-dialog-color: var(--rmerp-primary-color);
-    --rmerp-dialog-background-color: #fff;
+    --zr-dialog-color: var(--zr-primary-color);
+    --zr-dialog-background-color: #fff;
 
-    --rmerp-side-padding-small: 16px;
-    --rmerp-side-padding-medium: 54px;
-    --rmerp-side-padding-large: 142px;
+    --zr-padding-small: 16px;
+    --zr-padding-medium: 54px;
+    --zr-padding-large: 142px;
 
     /* override paper-elements theme */
-    --primary-color: var(--rmerp-primary-color);
-    --secondary-color: var(--rmerp-secondary-color);
-    --accent-color: var(--rmerp-accent-color);
-    --error-color: var(--rmerp-error-color);
+    --primary-color: var(--zr-primary-color);
+    --secondary-color: var(--zr-secondary-color);
+    --accent-color: var(--zr-accent-color);
+    --error-color: var(--zr-error-color);
 
     /* mixins */
     --unselectable: {
@@ -63,8 +63,8 @@
         @apply --layout-horizontal;
         @apply --layout-center;
         max-width: 100%;
-        height: var(--rmerp-drawer-toolbar-height);
-        color: var(--rmerp-primary-color);
+        height: var(--zr-drawer-toolbar-height);
+        color: var(--zr-primary-color);
         background: #fff;
         padding: 0 12px;
         font-size: 80%;
@@ -128,7 +128,7 @@
 
       .drawer__link:hover {
         background: var(--paper-grey-50);
-        color: var(--rmerp-secondary-color);
+        color: var(--zr-secondary-color);
       }
 
       .drawer__icon--list {
@@ -151,23 +151,23 @@
       }
 
       .layout__header {
-        height: var(--rmerp-primary-toolbar-height);
+        height: var(--zr-primary-toolbar-height);
         padding: 0;
-        background: var(--background-toolbar, var(--rmerp-primary-color));
+        background: var(--background-toolbar, var(--zr-primary-color));
         color: var(--color-toolbar, #fff);
         --app-header-shadow: {
           box-shadow: inset 0px 0px 0px 0px var(--primary-color);
         };
         --app-header-background-rear-layer: {
           /* The header when condensed */
-          background-color: var(--rmerp-primary-color);
+          background-color: var(--zr-primary-color);
         };
       }
 
       .header__toolbar {
         @apply --layout-horizontal;
         @apply --layout-center-center;
-        height: var(--rmerp-primary-toolbar-height);
+        height: var(--zr-primary-toolbar-height);
       }
 
       .toolbar__info {
@@ -213,63 +213,49 @@
       .layout__content {
         @apply --layout-vertical;
         @apply --layout-fit;
-        top: var(--rmerp-primary-toolbar-height);
+        top: var(--zr-primary-toolbar-height);
       }
 
       @media (min-width: 720px) { 
         .layout__header {
           --app-header-background-rear-layer: {
-            background-color: var(--background-toolbar, var(--rmerp-primary-color));
+            background-color: var(--background-toolbar, var(--zr-primary-color));
           };
         }
         .header__toolbar {
-          padding: 0 var(--rmerp-side-padding-medium);
+          padding: 0 var(--zr-padding-medium);
         }
       }
       @media (min-width: 1024px) { 
         .header__toolbar {
-          padding: 0 var(--rmerp-side-padding-large);
+          padding: 0 var(--zr-padding-large);
         }
       }
     </style>
   </template>
 </dom-module>
 
-<dom-module id="template-layout-styles">
+<dom-module id="page-layout-styles">
   <template>
     <style>
-      .template {
-        @apply --layout-fit;
-        width: 100%;
-      }
-
-      .template__header {
-        /*position: fixed;*/
-        width: 100%;
-        z-index: 1;
-        background: var(--background-toolbar, var(--rmerp-primary-soft-color));
-        color: var(--color-toolbar, #fff);
-      }
-
-      .header__toolbar {
-        @apply --layout-horizontal;
-        @apply --layout-center-center;
-        box-sizing: border-box;
-        height: var(--rmerp-secondary-toolbar-height);
-        padding: 0 var(--rmerp-side-padding-small);
-      }
-
-      .template__content {
-        @apply --layout-vertical;
-        @apply --layout-flex;
-        @apply --layout-fit;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+      .header {
         position: relative;
-        top: var(--rmerp-secondary-toolbar-height);
-        /* create a stacking context so all children are below the header */
-        z-index: 0;
-        box-sizing: border-box;
+      }
+
+      .toolbar {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: var(--zr-primary-toolbar-height);
+        color: #fff;
+        box-shadow: 0 4px 4px var(--primary-color);
+        background-color: var(--primary-color);
       }
 
       .toolbar__info {
@@ -277,9 +263,10 @@
         @apply --layout-center;
         @apply --layout-flex;
         overflow: hidden;
+        padding: 8px;
       }
 
-      .toolbar__info__img {
+      .toolbar__img {
         margin: 0 10px 0 0;
         height: 40px;
         width: 40px;
@@ -288,22 +275,17 @@
       }
 
       .toolbar__icon {
-        margin: 0 4px 0 -8px;
+        margin-right: 4px;
         height: 40px;
         width: 40px;
         min-width: 40px;
         color: #fff;
       }
 
-      .toolbar__icon--close {
-      }
-
-      .toolbar__icon--back {
-      }
-
       .toolbar__title {
         font-size: 18px;
         font-weight: 400;
+        margin-right: 8px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -311,19 +293,22 @@
 
       .toolbar__actions {
         @apply --layout-horizontal;
-        @apply --layout-center-center;
-        margin-right: 0px;
+        @apply --layout-center;
+        padding: 8px;
+      }
+
+      .content {
+        height: calc(100% - var(--zr-primary-toolbar-height));
+        margin-top: var(--zr-primary-toolbar-height);
+        overflow: auto;
+        background: #fefefe;
       }
 
       @media (min-width: 720px) { 
-        .header__toolbar {
-          padding: 0 var(--rmerp-side-padding-medium);
-        }
+        
       }
       @media (min-width: 1024px) { 
-        .header__toolbar {
-          padding: 0 var(--rmerp-side-padding-large);
-        }
+        
       }
     </style>
   </template>
@@ -333,18 +318,18 @@
   <template>
     <style>
       .content__page {
-        padding: 16px;
+        padding: var(--zr-padding-small);
       }
       @media (min-width: 720px) { 
         .content__page {
-          padding: var(--rmerp-side-padding-small) 
-                   var(--rmerp-side-padding-medium);
+          padding: var(--zr-padding-small) 
+                   var(--zr-padding-medium);
         }
       }
       @media (min-width: 1024px) { 
         .content__page {
-          padding: var(--rmerp-side-padding-small)
-                   var(--rmerp-side-padding-large);
+          padding: var(--zr-padding-small)
+                   var(--zr-padding-large);
         }
       }
 
@@ -354,14 +339,14 @@
 
       @media (min-width: 720px) { 
         .content__list {
-          padding: var(--rmerp-side-padding-small) 
-                   var(--rmerp-side-padding-medium);
+          padding: var(--zr-padding-small) 
+                   var(--zr-padding-medium);
         }
       }
       @media (min-width: 1024px) { 
         .content__list {
-          padding: var(--rmerp-side-padding-small)
-                   var(--rmerp-side-padding-large);
+          padding: var(--zr-padding-small)
+                   var(--zr-padding-large);
         }
       }
     </style>
@@ -383,7 +368,7 @@
         vertical-align: middle;
         box-sizing: border-box;
         color: var(--color-button, #fff);
-        background: var(--background-button, var(--rmerp-primary-dark-color));
+        background: var(--background-button, var(--zr-primary-dark-color));
         font-family: 'Roboto', sans-serif;
         font-size: 12px;
         font-weight: 400;
@@ -393,11 +378,11 @@
       }
 
       .button--text:hover {
-        background: var(--background-button-hover, var(--rmerp-primary-color));
+        background: var(--background-button-hover, var(--zr-primary-soft-color));
       }
 
       .button--text:focus {
-        background: var(--background-button-focus, var(--rmerp-primary-color));
+        background: var(--background-button-focus, var(--zr-primary-soft-color));
       }
 
       .button--danger {
@@ -419,9 +404,10 @@
       }
 
       .button--icon {
-        height: 40px;
-        width: 40px;
-        min-width: 40px;
+        padding: 4px;
+        height: 32px;
+        width: 32px;
+        min-width: 32px;
         color: var(--color-icon, #fff);
       }
     </style>
@@ -538,11 +524,11 @@
       }
 
       .table__item:hover {
-        background: var(--rmerp-accent-color);
+        background: var(--zr-accent-color);
       }
 
       .grid__item:hover {
-        background: var(--rmerp-accent-color);
+        background: var(--zr-accent-color);
       }
 
       .table__item--last-child {
@@ -688,7 +674,7 @@
           border-bottom: 1px solid var(--paper-grey-300);
         }
         --paper-input-container-label-floating: {
-          color: var(--rmerp-primary-color);
+          color: var(--zr-primary-color);
           font-size: 18px;
         }
       }
@@ -762,7 +748,14 @@
 <dom-module id="spinner-styles">
   <template>
     <style>
-      paper-spinner-lite {
+      .spinner--small {
+        --paper-spinner-color: var(--spinner-color, var(--zr-secondary-color));
+        --paper-spinner-stroke-width: 1px;
+        min-width: 28px;
+        min-height: 28px;
+      }
+
+      .spinner--big {
         --paper-spinner-color: var(--spinner-color, var(--secondary-color));
         --paper-spinner-stroke-width: 1px;
         position: absolute;
@@ -775,6 +768,21 @@
         width: 100px;
         height: 100px;
         opacity: 0.7;
+      }
+
+      .spinner__text {
+        position: absolute;
+        z-index: -45;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 50px;
+        bottom: 0;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        font-weight: 300;
+        color: var(--spinner-color, var(--secondary-color));
       }
     </style>
   </template>

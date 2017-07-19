@@ -3,7 +3,7 @@
   window.ZRCommon = {
 
     updateWindowLocation(location) {
-      window.history.pushState({}, null, location);
+      window.history.replaceState(null, null, location);
       window.dispatchEvent(new CustomEvent('location-changed'));
     },
 
@@ -23,6 +23,16 @@
 
     cloneObject(object) {
       return JSON.parse(JSON.stringify(object));
+    },
+
+    // Transform an object of objects in an array of objects.
+    objectsToArray(_object) {
+      if (!_object) return null;
+      return Object.keys(_object).map(function(key) {
+        var object = _object[key];
+        object.id = key;
+        return object;   
+      });
     }
 
   };

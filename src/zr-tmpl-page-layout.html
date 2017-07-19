@@ -1,0 +1,105 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+
+<link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="zr-styles.html">
+
+<dom-module id="zr-tmpl-page-layout">
+  <template>
+    <style include="page-layout-styles spinner-styles show-styles">
+      :host {
+        display: block;
+        height: 100vh;
+        overflow: hidden;
+      }
+    </style>
+
+    <div class="header">
+
+      <div class="toolbar">
+
+        <div class="toolbar__info">
+          <paper-icon-button
+            icon="zr-app-icons:menu"
+            class="toolbar__icon"
+            hidden$="[[!menu]]"
+            on-click="_menuTapped"></paper-icon-button>
+
+          <paper-icon-button
+            icon="zr-app-icons:close"
+            class="toolbar__icon"
+            hidden$="[[!close]]"
+            on-click="_closeTapped"></paper-icon-button>
+
+          <a href$="[[backPath]]" hidden$="[[!backPath]]">
+            <paper-icon-button
+              class="toolbar__icon"
+              icon="zr-app-icons:arrow-back"></paper-icon-button>
+          </a>
+
+          <iron-icon class="toolbar__img" icon$="zr-app-icons:[[icon]]" hidden$="[[!icon]]"></iron-icon>
+          <span class="toolbar__title">{{title}}</span>
+          <paper-spinner-lite class="spinner--small" active="{{loading}}"></paper-spinner-lite>
+        </div>
+
+        <div class="toolbar__actions">
+          <slot name="action"></slot>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="content">
+      <slot name="content"></slot>
+    </div>
+    
+  </template>
+
+  <script>
+
+    class ZRTmplPageLayout extends Polymer.Element {
+
+      static get is() { return 'zr-tmpl-page-layout'; }
+
+      static get properties() {
+        return {
+
+          user: Object,
+
+          title: {
+            type: String,
+            value: ''
+          },
+
+          icon: {
+            type: String,
+            value: ''
+          },
+
+          close: {
+            type: Boolean,
+            value: false
+          },
+
+          backPath: {
+            type: String,
+            value: ''
+          },
+
+          loading: Boolean,
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+  
+        }
+      }
+
+    }
+
+    window.customElements.define(ZRTmplPageLayout.is, ZRTmplPageLayout);
+
+  </script>
+</dom-module>

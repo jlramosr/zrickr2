@@ -1,0 +1,45 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="zr-404">
+  <template>
+    <style include="">
+      :host {
+        display: block;
+        height: 100vh;
+        background: #fefefe;
+      }
+    </style>
+
+    [[message]]
+
+  </template>
+
+  <script>
+
+    class ZR404 extends Polymer.Element {
+
+      static get is() { return 'zr-404'; }
+
+      static get properties() {
+        return {
+
+          appName: String,
+
+          message: {
+            type: String,
+            value: '404 error'
+          },
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+  
+        }
+      }
+
+    }
+
+    window.customElements.define(ZR404.is, ZR404);
+
+  </script>
+</dom-module>
