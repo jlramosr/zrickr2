@@ -45,10 +45,7 @@
             observer: '_actionChanged'
           },
 
-          _itemId: {
-            type: String,
-            observer: '_collectionIdChanged'
-          },
+          _itemId: String,
 
           route: {
             type: Object,
@@ -67,10 +64,24 @@
         return collection.items[_itemId];
       }
 
-      _routeChanged(route) {
-        if (route.path == "undefined") { return; }
+      _checkActiveRoute(route) {
+        //https://stackoverflow.com/questions/2647867/how-to-determine-if-variable-is-undefined-or-null
+        if (route.path == null) { return false; }
 
-        console.log("route ITEM", route);
+        const prefix = route.prefix.split('/');
+        const page = prefix[1];
+        const collectionAction = prefix[3];
+
+        if (page !== 'catalog' || collectionAction !== 'item') {
+          this._itemId = null;
+          return false;
+        }
+
+        return true;
+      }
+
+      _routeChanged(route) {
+        if (!this._checkActiveRoute(route)) { return; }
 
         const prefix = route.prefix.split('/');
 
@@ -101,9 +112,6 @@
       _actionChanged(_action) {
         const resolvedPageUrl = this.resolveUrl('zr-catalog-item-' + _action + '.html');
         Polymer.importHref(resolvedPageUrl, null, null, true);
-      }
-
-      _collectionIdChanged(_collectionId) {
       }
 
     }

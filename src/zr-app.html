@@ -153,8 +153,14 @@
         return '/' + userUid;
       }
 
+      _checkActiveRoute(route) {
+        //https://stackoverflow.com/questions/2647867/how-to-determine-if-variable-is-undefined-or-null
+        if (route.path == null) { return false; }
+        return true;
+      }
+
       _routeChanged(route) {
-        if (route.path == "undefined") { return; }
+        if (!this._checkActiveRoute(route)) { return; }
 
         const path = route.path.split('/');
         var page = path[1];

@@ -15,6 +15,7 @@
     <app-route
       route="{{route}}"
       pattern="/:collectionId/:action"
+      active="{{active}}"
       tail="{{subroute}}"></app-route>
 
     <iron-pages selected="[[_action]]" attr-for-selected="name" fallback-selection="page-404">
@@ -38,8 +39,6 @@
         collection="[[collection]]"
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-catalog-settings>
-
-      <zr-catalog-404 name="404"></zr-catalog-404>
 
       <zr-page-404 name="page-404"></zr-page-404>
 
@@ -82,21 +81,26 @@
 
       static get observers() {
         return [
-            '_dataCollectionChanged(data, _collectionId)'
+          '_dataCollectionChanged(data, _collectionId)'
         ]
       }
 
-      _routeChanged(route) {
-        if (route.path == "undefined") { return; }
-
-        console.log("route CATALOG", route);
+      _checkActiveRoute(route) {
+        //https://stackoverflow.com/questions/2647867/how-to-determine-if-variable-is-undefined-or-null
+        if (route.path == null) { return false; }
 
         const prefix = route.prefix.split('/');
         const page = prefix[1];
         if (page !== 'catalog') {
           this._collectionId = null;
-          return;
+          return false;
         }
+
+        return true;
+      }
+
+      _routeChanged(route) {
+        if (!this._checkActiveRoute(route)) { return; }
 
         const path = route.path.split('/');
         const collectionId = path[1];
@@ -127,7 +131,9 @@
         if (!data) { return; }
         if (!('collections' in data) || !(_collectionId in data.collections)) { 
           this.collection = null;
-          this._action = '404';
+          this.collectionExists = false;
+          //LA IDEA YA NO ES ESTA, SINO DENTRO DE CADA  ELEMENTO
+          //PASARLE UN PARAMETRO EN PLAN "collectionExists"
           return;
         }
         this.collection = data.collections[_collectionId];
