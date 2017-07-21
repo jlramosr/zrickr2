@@ -1,0 +1,28 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="zr-styles.html">
+
+<dom-module id="zr-page-404">
+  <template>
+
+    <style include="content-styles"></style>
+
+    <div id="content" class="content__page">
+      <p>The page you're looking for could have been deleted or never have existed.</p>
+      <p>Visit the <a class="" href="/">homepage</a></p>
+    </div>
+
+  </template>
+
+  <script>
+
+    class ZRPage404 extends Polymer.Element {
+
+      static get is() { return 'zr-page-404'; }
+
+    }
+
+    window.customElements.define(ZRPage404.is, ZRPage404);
+
+  </script>
+</dom-module>

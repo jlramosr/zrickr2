@@ -4,10 +4,8 @@
 <link rel="import" href="zr-common.html">
 
 <link rel="lazy-import" href="zr-catalog-list.html">
-<link rel="lazy-import" href="zr-catalog-item.html">
+<link rel="lazy-import" href="zr-item.html">
 <link rel="lazy-import" href="zr-catalog-settings.html">
-<link rel="lazy-import" href="zr-catalog-404.html">
-<link rel="lazy-import" href="zr-page-404.html">
 
 <dom-module id="zr-catalog">
   <template>
@@ -17,7 +15,7 @@
       pattern="/:collectionId/:action"
       tail="{{subroute}}"></app-route>
 
-    <iron-pages selected="[[_action]]" attr-for-selected="name" fallback-selection="page-404">
+    <iron-pages selected="[[_action]]" attr-for-selected="name" fallback-selection="404">
 
       <zr-catalog-list
         name="list"
@@ -25,13 +23,13 @@
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-catalog-list>
 
-      <zr-catalog-item
+      <zr-item
         name="item"
         default-action="overview"
         collection="[[collection]]"
-        route="[[subroute]]"
+        route="{{subroute}}"
         small-screen="[[smallScreen]]"
-        medium-screen="[[mediumScreen]]"></zr-catalog-item>
+        medium-screen="[[mediumScreen]]"></zr-item>
 
       <zr-catalog-settings
         name="settings"
@@ -39,9 +37,9 @@
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-catalog-settings>
 
-      <zr-catalog-404 name="404"></zr-catalog-404>
-
-      <zr-page-404 name="page-404"></zr-page-404>
+      <zr-404
+        name="404"
+        message="Action Collection Not Found"></zr-404>
 
     </iron-pages>
 
@@ -66,7 +64,12 @@
             observer: '_actionChanged'
           },
 
-          _collectionId: Object,
+          _collectionId: String,
+
+          collection: {
+            type: Object,
+            computed: '_computeCollection(data,_collectionId)'     
+          },
 
           route: {
             type: Object,
@@ -78,12 +81,6 @@
           mediumScreen: Boolean
 
         };
-      }
-
-      static get observers() {
-        return [
-            '_dataCollectionChanged(data, _collectionId)'
-        ]
       }
 
       _routeChanged(route) {
@@ -121,23 +118,20 @@
         this._action = action;
       }
 
-      _dataCollectionChanged(data, _collectionId) {
-        console.log("COLLECTION CHANGE", data, _collectionId);
-        // get collection.
-        if (!data) { return; }
-        if (!('collections' in data) || !(_collectionId in data.collections)) { 
-          this.collection = null;
-          this._action = '404';
-          return;
-        }
-        this.collection = data.collections[_collectionId];
+      _actionChanged(_action) {
+        var url = 'zr-catalog-' + _action + '.html';
+        if (_action === 'item') { url = 'zr-item.html'; }
+        // Load action import on demand
+        var resolvedPageUrl = this.resolveUrl(url);
+        Polymer.importHref(resolvedPageUrl, null, null, true);
       }
 
-      _actionChanged(_action) {
-        // Load action import on demand
-        const resolvedPageUrl = this.resolveUrl('zr-catalog-' + _action + '.html');
-        console.log('zr-catalog-' + _action + '.html');
-        Polymer.importHref( resolvedPageUrl, null, null, true);
+      _computeCollection(data, _collectionId) {
+        if (!data || !('collections' in data)) { return null; }
+        if (!(_collectionId in data.collections)) {
+          return {'noexists': true};
+        }
+        return data.collections[_collectionId];
       }
 
     }

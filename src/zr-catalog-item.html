@@ -1,0 +1,114 @@
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="zr-common.html">
+
+<link rel="lazy-import" href="zr-catalog-item-overview.html">
+<link rel="lazy-import" href="zr-page-404.html">
+
+<dom-module id="zr-catalog-item">
+  <template>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:itemId/:action"
+      tail="{{subroute}}"></app-route>
+
+    <iron-pages selected="[[_action]]" attr-for-selected="name" fallback-selection="page-404">
+
+      <zr-catalog-item-overview
+        name="overview"
+        item="[[_computeItem(collection,_itemId)]]"
+        small-screen="[[smallScreen]]"
+        medium-screen="[[mediumScreen]]"></zr-catalog-item-overview>
+
+      <zr-page-404 name="page-404"></zr-page-404>
+
+    </iron-pages>
+
+  </template>
+
+  <script>
+    class ZRCatalogItem extends Polymer.Element {
+
+      static get is() { return 'zr-catalog-item'; }
+
+      static get properties() {
+        return {
+
+          defaultAction: String,
+
+          collection: Object,
+
+          action: {
+            type: String,
+            observer: '_actionChanged'
+          },
+
+          _itemId: {
+            type: String,
+            observer: '_collectionIdChanged'
+          },
+
+          route: {
+            type: Object,
+            observer: '_routeChanged'
+          },
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+
+        };
+      }
+
+      _computeItem(collection, _itemId) {
+        if (!collection) { return null; }
+        return collection.items[_itemId];
+      }
+
+      _routeChanged(route) {
+        if (route.path == "undefined") { return; }
+
+        console.log("route ITEM", route);
+
+        const prefix = route.prefix.split('/');
+
+        const path = route.path.split('/');
+        const itemId = path[1];
+
+        if (!itemId) {
+          prefix.splice(prefix.length-1,1);
+          ZRCommon.updateWindowLocation(prefix.join('/'));
+          return;
+        }
+
+        // update itemId.
+        this._itemId = itemId;
+
+        var action = path[2];
+
+        // redirect to defaultAction if there is no action.
+        if (!action || action === '') {
+          ZRCommon.updateWindowLocation(route.prefix + route.path + '/' + this.defaultAction);
+          return;
+        }
+
+        // update action.
+        this._action = action;
+      }
+
+      _actionChanged(_action) {
+        const resolvedPageUrl = this.resolveUrl('zr-catalog-item-' + _action + '.html');
+        Polymer.importHref(resolvedPageUrl, null, null, true);
+      }
+
+      _collectionIdChanged(_collectionId) {
+      }
+
+    }
+
+    window.customElements.define(ZRCatalogItem.is, ZRCatalogItem);
+
+  </script>
+</dom-module>

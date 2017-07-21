@@ -30,7 +30,7 @@
         <iron-list id="ironList" items="[[_computeCollectionItems(collection)]]" class="list" as="item">
           <template>
             <div class="table__item-container">
-              <a class$="table__item [[_computeItemClass(index, collections.items.length)]]" href="/catalog/[[collection.id]]/[[item.id]]">
+              <a class$="table__item [[_computeItemClass(index, collections.items.length)]]" href="/catalog/[[collection.id]]/item/[[item.id]]">
                 <div class="table__item__detail">
                   <span class="table__item--primary-text">[[item.name]]</span>
                   <span class="table__item--secondary-text">[[item.description]]</span>
@@ -55,7 +55,10 @@
       static get properties() {
         return {
 
-          collection: Object,
+          collection: {
+            type: Object,
+            observer: '_collectionChanged'
+          },
 
           loading: Boolean,
 
@@ -66,14 +69,18 @@
         }
       }
 
-      _computeCollectionItems(collection) {
-        if (!collection) {
+      _collectionChanged(collection, oldCollection) {
+        if (!oldCollection) {
           this.loading = true;
-          return null;
+          return;
         }
         window.setTimeout(_ => {
           this.loading = false;
         }, 300);
+      }
+
+      _computeCollectionItems(collection) {
+        if (!collection) { return null; }
         return ZRCommon.objectsToArray(collection.items);
       }
 

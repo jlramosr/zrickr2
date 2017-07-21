@@ -4,7 +4,7 @@
 
 <link rel="lazy-import" href="zr-product.html">
 <link rel="lazy-import" href="zr-login.html">
-<link rel="lazy-import" href="zr-404.html">
+<link rel="lazy-import" href="zr-page-404.html">
 
 <dom-module id="zr-guest">
   <template>
@@ -14,7 +14,7 @@
       pattern="/:page"
       tail="{{subroute}}"></app-route>
 
-    <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="404">
+    <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="page-404">
 
       <zr-product
         name="product"
@@ -28,11 +28,7 @@
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-login>
 
-      <zr-404
-        name="404"
-        message="Page Not Found"
-        small-screen="[[smallScreen]]"
-        medium-screen="[[mediumScreen]]"></zr-404>
+      <zr-page-404 name="page-404"></zr-page-404>
 
     </iron-pages>
   

@@ -16,7 +16,7 @@
 <link rel="lazy-import" href="zr-dashboard.html">
 <link rel="lazy-import" href="zr-profile.html">
 <link rel="lazy-import" href="zr-catalog.html">
-<link rel="lazy-import" href="zr-404.html">
+<link rel="lazy-import" href="zr-page-404.html">
 
 <dom-module id="zr-app">
   <template>
@@ -76,15 +76,22 @@
           </app-toolbar>
         </app-header>-->
 
-        <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="404">
+        <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="page-404">
 
           <zr-dashboard
             name="dashboard"
             app-name="[[appName]]"
-            user="[[user]]"
             data="[[data]]"
             small-screen="[[smallScreen]]"
             medium-screen="[[mediumScreen]]"></zr-dashboard>
+
+          <zr-catalog
+            name="catalog"
+            default-action="list"
+            data="[[data]]"
+            route="[[subroute]]"
+            small-screen="[[smallScreen]]"
+            medium-screen="[[mediumScreen]]"></zr-catalog>
 
           <zr-profile
             name="profile"
@@ -93,20 +100,7 @@
             small-screen="[[smallScreen]]"
             medium-screen="[[mediumScreen]]"></zr-profile>
 
-          <zr-catalog
-            name="catalog"
-            default-action="list"
-            user="[[user]]"
-            data="[[data]]"
-            route="[[subroute]]"
-            small-screen="[[smallScreen]]"
-            medium-screen="[[mediumScreen]]"></zr-catalog>
-
-          <zr-404
-            name="404"
-            message="Page Not Found"
-            small-screen="[[smallScreen]]"
-            medium-screen="[[mediumScreen]]"></zr-404>
+          <zr-page-404 name="page-404"></zr-page-404>
 
         </iron-pages>
 
@@ -188,7 +182,7 @@
 
       _pageChanged(_page) {
         // Load page import on demand
-        var resolvedPageUrl = this.resolveUrl('zr-' + _page + '.html');
+        const resolvedPageUrl = this.resolveUrl('zr-' + _page + '.html');
         Polymer.importHref(resolvedPageUrl, null, null, true);
       }
 
