@@ -1,15 +1,24 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <dom-module id="zr-backend-data">
 
   <template>
 
+    <!-- One document -->
     <firebase-document
       id="document"
       app-name="zrickr2"
-      path="[[path]]"
-      data="{{documentDataObject}}"></firebase-document>
+      path="[[documentPath]]"
+      data="{{documentData}}"></firebase-document>
+
+    <!-- Set of documents -->
+    <firebase-query
+      id="set"
+      app-name="zrickr2"
+      path="[[setPath]]"
+      data="{{setData}}"></firebase-query>
 
   </template>
 
@@ -22,38 +31,76 @@
       static get properties() {
         return {
 
-          path: String,
+          setPath: String,
 
-          documentDataObject: Object,
+          documentPath: String,
 
-          document: {
+          setData: {
             type: Object,
-            notify: true,
-            computed: '_computeDocument(documentDataObject)',
-            observer: '_documentChanged',
+            notify: true
+          },
+
+          documentData: {
+            type: Object,
+            notify: true
           },
 
           loading: {
             type: Boolean,
-            notify: true,
-            value: true
+            notify: true
           }
 
         }
       }
 
-      _computeDocument(documentDataObject) {
-        if (!documentDataObject || Object.keys(documentDataObject).length === 0) return null;
-        this.loading = true;
-        return documentDataObject;
+      static get observers() {
+        return [
+          '_dataChanged(setData.length, documentData)',
+          '_pathChanged(setPath, documentPath)'
+        ];
       }
 
-      _documentChanged(document, oldDocument) {
-        if (oldDocument !== undefined) {
+      _pathChanged(setPath, documentPath) {
+        if (setPath || documentPath) {
+          this.loading = true;
+        }
+      }
+
+      _dataChanged(setDataLength, documentData) {
+        if (setDataLength) {
+          window.setTimeout(() => {
+            this._checkSetDataLoad(setDataLength);
+          });
+        }
+        if (documentData) {
+          const documentDataEmpty = !Object.keys(documentData).length;
+          window.setTimeout(() => {
+            this._checkDocumentDataLoad(documentDataEmpty);
+          });
+        }
+      }
+
+      _checkSetDataLoad(lengthTemp) {
+        const lengthNow = this.setData.length;
+        if (lengthTemp === lengthNow) {
+          //emulate 1 second retrieving set of documents.
           window.setTimeout(() => {
             this.loading = false;
-          }, 300);
+          }, 1000);
         }
+      }
+
+      _checkDocumentDataLoad(documentDataEmpty) {
+        if (!documentDataEmpty) {
+          //emulate 1 second retrieving document.
+          window.setTimeout(() => {
+            this.loading = false;
+          }, 1000);
+        }
+      }
+
+      getId(document) {
+        return document.$key;
       }
 
       create(item) {

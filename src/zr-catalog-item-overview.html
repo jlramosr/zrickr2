@@ -9,7 +9,10 @@
 
     <style include="list-styles content-styles"></style>
 
-    <zr-tmpl-page-layout menu title="[[item.name]]" loading="{{loading}}">
+    <zr-tmpl-page-layout 
+      menu 
+      title="[[itemInfo.primary_field]]" 
+      loading="[[_computeLoading(loadingCollectionInfo, loadingItemInfo, loadingItemFields)]]">
 
       <zr-tmpl-button
         slot="action"
@@ -27,7 +30,7 @@
 
       <div id="content" slot="content" class="content__page">
         
-        ITEM OVERVIEW
+         [[collectionInfo.name]] [[itemInfo.primary_field]]
 
       </div>
 
@@ -44,15 +47,25 @@
       static get properties() {
         return {
 
-          item: Object,
+          itemInfo: Object,
 
-          loading: Boolean,
+          loadingItemInfo: Boolean,
+
+          loadingCollectionInfo: Boolean,
+
+          collecionInfo: Object,
+
+          loadingItemFields: Boolean,
 
           smallScreen: Boolean,
 
           mediumScreen: Boolean
   
         }
+      }
+
+      _computeLoading(loadingCollectionInfo, loadingItemInfo, loadingItemFields) {
+        return loadingCollectionInfo && loadingItemInfo; //&& loadingItemFields;
       }
 
     }

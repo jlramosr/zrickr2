@@ -74,10 +74,10 @@
         if (!_user) { return null; }
         const userProviderData = _user.providerData[0];
         return {
+          id: userProviderData.uid,
           name: userProviderData.displayName,
           email: userProviderData.email,
-          photo: userProviderData.photoURL,
-          uid: userProviderData.uid
+          photo: userProviderData.photoURL
         };
       }
 

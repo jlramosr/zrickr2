@@ -6,7 +6,6 @@
 <link rel="lazy-import" href="zr-catalog-list.html">
 <link rel="lazy-import" href="zr-catalog-item.html">
 <link rel="lazy-import" href="zr-catalog-settings.html">
-<link rel="lazy-import" href="zr-catalog-404.html">
 <link rel="lazy-import" href="zr-page-404.html">
 
 <dom-module id="zr-catalog">
@@ -15,30 +14,40 @@
     <app-route
       route="{{route}}"
       pattern="/:collectionId/:action"
-      active="{{active}}"
       tail="{{subroute}}"></app-route>
+
+    <zr-backend-data
+      document-path="[[_computeCollectionInfoPath(userId,collectionId)]]"
+      document-data="{{collectionInfo}}"
+      loading="{{loadingCollectionInfo}}"></zr-backend-data>
 
     <iron-pages selected="[[_action]]" attr-for-selected="name" fallback-selection="page-404">
 
       <zr-catalog-list
         name="list"
-        collection="[[collection]]"
+        collection-id="[[collectionId]]"
+        collection-info="[[collectionInfo]]"
+        loading-collection-info="[[loadingCollectionInfo]]"
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-catalog-list>
 
-      <zr-catalog-item
+       <zr-catalog-item
         name="item"
         default-action="overview"
-        collection="[[collection]]"
+        collection-id="[[collectionId]]"
+        collection-info="[[collectionInfo]]"
+        loading-collection-info="[[loadingCollectionInfo]]"
         route="[[subroute]]"
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-catalog-item>
 
       <zr-catalog-settings
         name="settings"
-        collection="[[collection]]"
+        collection-id="[[collectionId]]"
+        collection-info="[[collectionInfo]]"
+        loading-collection-info="[[loadingCollectionInfo]]"
         small-screen="[[smallScreen]]"
-        medium-screen="[[mediumScreen]]"></zr-catalog-settings>
+        medium-screen="[[mediumScreen]]"></zr-catalog-settings> 
 
       <zr-page-404 name="page-404"></zr-page-404>
 
@@ -56,21 +65,25 @@
 
           defaultAction: String,
 
-          data: Object,
-
-          user: Object,
+          route: {
+            type: Object,
+            observer: '_routeChanged'
+          },
 
           _action: {
             type: String,
             observer: '_actionChanged'
           },
 
-          _collectionId: Object,
+          userId: Object,
 
-          route: {
-            type: Object,
-            observer: '_routeChanged'
-          },
+          collections: Object,
+
+          collectionId: Object,
+
+          collectionInfo: Object,
+
+          loadingCollectionInfo: Boolean,
 
           smallScreen: Boolean,
 
@@ -79,10 +92,9 @@
         };
       }
 
-      static get observers() {
-        return [
-          '_dataCollectionChanged(data, _collectionId)'
-        ]
+      _computeCollectionInfoPath(userId, collectionId) {
+        return userId && collectionId ?
+          `/user_collections/${userId}/collections/${collectionId}` : null;
       }
 
       _checkActiveRoute(route) {
@@ -92,7 +104,7 @@
         const prefix = route.prefix.split('/');
         const page = prefix[1];
         if (page !== 'catalog') {
-          this._collectionId = null;
+          this.collectionId = null;
           return false;
         }
 
@@ -111,7 +123,7 @@
         }
 
         // update collectionId.
-        this._collectionId = collectionId;
+        this.collectionId = collectionId;
 
         var action = path[2];
         
@@ -125,24 +137,9 @@
         this._action = action;
       }
 
-      _dataCollectionChanged(data, _collectionId) {
-        console.log("COLLECTION CHANGE", data, _collectionId);
-        // get collection.
-        if (!data) { return; }
-        if (!('collections' in data) || !(_collectionId in data.collections)) { 
-          this.collection = null;
-          this.collectionExists = false;
-          //LA IDEA YA NO ES ESTA, SINO DENTRO DE CADA  ELEMENTO
-          //PASARLE UN PARAMETRO EN PLAN "collectionExists"
-          return;
-        }
-        this.collection = data.collections[_collectionId];
-      }
-
       _actionChanged(_action) {
         // Load action import on demand
         const resolvedPageUrl = this.resolveUrl('zr-catalog-' + _action + '.html');
-        console.log('zr-catalog-' + _action + '.html');
         Polymer.importHref( resolvedPageUrl, null, null, true);
       }
 

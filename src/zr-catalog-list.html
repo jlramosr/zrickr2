@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
 
+<link rel="import" href="zr-backend-data.html">
 <link rel="import" href="zr-tmpl-page-layout.html">
 <link rel="import" href="zr-common.html">
 <link rel="import" href="zr-styles.html">
@@ -7,9 +9,18 @@
 <dom-module id="zr-catalog-list">
   <template>
 
-    <style include="list-styles"></style>
+    <style include="list-styles content-styles"></style>
 
-    <zr-tmpl-page-layout menu title="[[collection.name]]" loading="{{loading}}">
+    <zr-backend-data
+      id="backend"
+      set-path="[[_computeItemsPath(collectionId)]]"
+      set-data="{{items}}"
+      loading="{{loadingItems}}"></zr-backend-data>
+
+    <zr-tmpl-page-layout 
+      menu 
+      title="[[collectionInfo.name]]" 
+      loading="[[_computeLoading(loadingCollectionInfo, loadingItems)]]">
 
       <zr-tmpl-button
         slot="action"
@@ -27,13 +38,13 @@
 
       <div id="content" slot="content" class="content__list">
         
-        <iron-list id="ironList" items="[[_computeCollectionItems(collection)]]" class="list" as="item">
+        <iron-list id="ironList" items="[[items]]" class="list" as="item">
           <template>
-            <div class="table__item-container">
-              <a class$="table__item [[_computeItemClass(index, collections.items.length)]]" href="/catalog/[[collection.id]]/item/[[item.id]]">
+            <div class$="table__item-container [[_notifyResize(index, items.length)]]">
+              <a class="table__item" href="[[_computeUrlItem(collectionId,item)]]">
                 <div class="table__item__detail">
-                  <span class="table__item--primary-text">[[item.name]]</span>
-                  <span class="table__item--secondary-text">[[item.description]]</span>
+                  <span class="table__item--primary-text">[[item.primary_field]]</span>
+                  <span class="table__item--secondary-text">[[item.primary_field]]</span>
                 </div>
               </a>
             </div>
@@ -55,12 +66,15 @@
       static get properties() {
         return {
 
-          collection: {
-            type: Object,
-            observer: '_collectionChanged'
-          },
+          collectionId: String,
 
-          loading: Boolean,
+          collectionInfo: Object,
+
+          items: Object,
+
+          loadingCollectionInfo: Boolean,
+
+          loadingItems: Boolean,
 
           smallScreen: Boolean,
 
@@ -69,22 +83,21 @@
         }
       }
 
-      _collectionChanged(collection, oldCollection) {
-        if (!oldCollection) {
-          this.loading = true;
-          return;
-        }
-        window.setTimeout(_ => {
-          this.loading = false;
-        }, 300);
+      _computeItemsPath(collectionId) {
+        return collectionId ? 
+          `/collection_items/${collectionId}/items` : null;
       }
 
-      _computeCollectionItems(collection) {
-        if (!collection) { return null; }
-        return ZRCommon.objectsToArray(collection.items);
+      _computeLoading(loadingCollectionInfo, loadingItems) {
+        return loadingCollectionInfo && loadingItems;
       }
 
-      _computeItemClass() {
+      _computeUrlItem(collectionId, item) {
+        const itemId = this.$.backend.getId(item);
+        return `/catalog/${collectionId}/item/${itemId}`;
+      }
+
+      _notifyResize() {
         window.setTimeout(_ => {
           this.$.ironList.notifyResize();
         });

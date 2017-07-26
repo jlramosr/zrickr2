@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 
+<link rel="import" href="zr-backend-data.html">
 <link rel="import" href="zr-tmpl-page-layout.html">
 <link rel="import" href="zr-common.html">
 <link rel="import" href="zr-styles.html">
@@ -10,7 +11,13 @@
 
     <style include="content-styles list-styles"></style>
 
-    <zr-tmpl-page-layout menu title="[[appName]]" loading="{{loading}}">
+    <zr-backend-data
+      id="backend"
+      set-path="[[_computeCollectionsPath(userId)]]"
+      set-data="{{_collections}}"
+      loading="{{loadingCollections}}"></zr-backend-data>
+
+    <zr-tmpl-page-layout menu title="[[appName]]" loading="[[loadingCollections]]">
 
       <zr-tmpl-button
         slot="action"
@@ -28,10 +35,10 @@
 
       <div id="content" slot="content" class="content__list">
 
-        <iron-list id="ironList" items="[[_computeUserCollections(data)]]" class="list" as="collection">
+        <iron-list id="ironList" items="[[_collections]]" class="list" as="collection">
           <template>
-            <div class="table__item-container">
-              <a class$="table__item [[_computeItemClass(index, collections.length)]]" href="/catalog/[[collection.id]]">
+            <div class$="table__item-container [[_notifyResize(index, _collections.length)]]">
+              <a class="table__item" href="[[_computeUrlCollection(collection)]]">
                 <div class="table__item__detail">
                   <span class="table__item--primary-text">[[collection.label]]</span>
                   <span class="table__item--secondary-text">[[collection.description]]</span>
@@ -58,9 +65,11 @@
 
           appName: String,
 
-          data: Object,
+          userId: Object,
 
-          loading: Boolean,
+          _collections: Object,
+
+          loadingCollections: Boolean,
 
           smallScreen: Boolean,
 
@@ -69,18 +78,17 @@
         }
       }
 
-      _computeUserCollections(data) {
-        if (!data) {
-          this.loading = true;
-          return null;
-        }
-        window.setTimeout(_ => {
-          this.loading = false;
-        }, 300);
-        return ZRCommon.objectsToArray(data.collections);
+      _computeCollectionsPath(userId) {
+        return userId ? 
+          `/user_collections/${userId}/collections` : null;
       }
 
-      _computeItemClass() {
+      _computeUrlCollection(collection) {
+        const collectionId = this.$.backend.getId(collection);
+        return `/catalog/${collectionId}`;
+      }
+
+      _notifyResize() {
         window.setTimeout(_ => {
           this.$.ironList.notifyResize();
         });

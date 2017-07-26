@@ -11,14 +11,21 @@
 
     <app-route
       route="{{route}}"
-      pattern="/:itemId/:action"
-      tail="{{subroute}}"></app-route>
+      pattern="/:itemId/:action"></app-route>
+
+    <zr-backend-data
+      document-path="[[_computeItemInfoPath(collectionId,itemId)]]"
+      document-data="{{itemInfo}}"
+      loading="{{loadingItemInfo}}"></zr-backend-data>
 
     <iron-pages selected="[[_action]]" attr-for-selected="name" fallback-selection="page-404">
 
       <zr-catalog-item-overview
         name="overview"
-        item="[[_computeItem(collection,_itemId)]]"
+        item-info="[[itemInfo]]"
+        loading-item-info="[[loadingItemInfo]]"
+        collection-info="[[collectionInfo]]"
+        loading-collection-info="[[loadingCollectionInfo]]"
         small-screen="[[smallScreen]]"
         medium-screen="[[mediumScreen]]"></zr-catalog-item-overview>
 
@@ -38,18 +45,26 @@
 
           defaultAction: String,
 
-          collection: Object,
+          collectionId: String,
 
-          action: {
-            type: String,
-            observer: '_actionChanged'
-          },
+          collectionInfo: Object,
 
-          _itemId: String,
+          loadingCollectionInfo: Boolean,
+
+          itemId: String,
+
+          itemInfo: Object,
+
+          loadingItemInfo: Boolean,
 
           route: {
             type: Object,
             observer: '_routeChanged'
+          },
+
+          _action: {
+            type: String,
+            observer: '_actionChanged'
           },
 
           smallScreen: Boolean,
@@ -59,9 +74,9 @@
         };
       }
 
-      _computeItem(collection, _itemId) {
-        if (!collection) { return null; }
-        return collection.items[_itemId];
+      _computeItemInfoPath(collectionId,itemId) {
+        return collectionId && itemId ? 
+          `/collection_items/${collectionId}/items/${itemId}` : null;
       }
 
       _checkActiveRoute(route) {
@@ -73,7 +88,7 @@
         const collectionAction = prefix[3];
 
         if (page !== 'catalog' || collectionAction !== 'item') {
-          this._itemId = null;
+          this.itemId = null;
           return false;
         }
 
@@ -94,8 +109,9 @@
           return;
         }
 
+
         // update itemId.
-        this._itemId = itemId;
+        this.itemId = itemId;
 
         var action = path[2];
 

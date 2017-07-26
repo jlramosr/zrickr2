@@ -1,60 +1,644 @@
 {
-  "101309302582172320804" : {
-    "clients" : {
-      "-KfH53O-33l9J6kjbvP8" : {
-        "individual" : true,
-        "name" : "123"
-      },
-      "-KfH5jnNVgeom4qlOOu0" : {
-        "individual" : true,
-        "name" : "1241266"
-      },
-      "-KfH5lJVKCf4yFbGNEdN" : {
-        "individual" : true,
-        "name" : "asdf"
-      },
-      "-KfH6cTlwiG9sMuXtPF1" : {
-        "individual" : true,
-        "name" : "1234"
-      },
-      "-KfH9seJdCSPnD0tE859" : {
-        "individual" : true,
-        "name" : "3213213"
-      },
-      "-KfHUwd3CUqbo6zfVoQ2" : {
-        "individual" : true,
-        "name" : "sadasdasd"
-      },
-      "-KfHirp0B57B99I-JGyS" : {
-        "individual" : true,
-        "name" : "123213213"
-      },
-      "-KfHirp0B57B99I-JGT2" : {
-        "individual" : true,
-        "name" : "123213213"
-      },
-      "-KfHirp0B57B99I-JGg5" : {
-        "individual" : true,
-        "name" : "123213213"
-      },
-      "-KfHirp0B57B99I-JGq1" : {
-        "individual" : true,
-        "name" : "123213213"
+
+  "user_collections": {
+    "101309302582172320804": {
+      "collections": {
+        "c001" : {
+          "name": "carpetas_papeleria",
+          "label": "Carpetas Papelería",
+          "description": "Papelería"
+        },
+        "c002" : {
+          "name": "clientes",
+          "label": "Clientes",
+          "description": "Clientes de la empresa",
+          "color": "#FF0000"
+        },
+        "c003" : {
+          "name": "facturas",
+          "label": "Facturas",
+          "description": "Facturas de la empresa"
+        },
+        "c005" : {
+          "name": "futbolistas",
+          "label": "Futbolistas"
+        },
+        "c006" : {
+          "name": "sellos",
+          "label": "Sellos",
+          "description": "Mi colección de sellos"
+        },
+        "c007" : {
+          "name": "contabilidad_personal",
+          "label": "Contabilidad Personal",
+          "description": "Mis cuentas"
+        },
+        "c008" : {
+          "name": "contabilidad_empresa",
+          "label": "Contabilidad de la Empresa",
+          "description": "Toda la contabilidad de mi empresa"
+        },
+        "c009" : {
+          "name": "entrenadores",
+          "label": "Entrenadores",
+          "description": "Entrenadores de primera división"
+        },
+        "c011" : {
+          "name": "aviones",
+          "label": "Aviones",
+          "description": "Mi colección de aviones"
+        },
+        "c012" : {
+          "name": "ordenadores",
+          "label": "ordenadores",
+          "description": "Todos los ordenadores que hemos comprado"
+        },
+        "c013" : {
+          "name": "ciudades",
+          "label": "Ciudades",
+          "description": "Ciudades inventadas por mí"
+        },
+        "c014" : {
+          "name": "peliculas",
+          "label": "Películas",
+          "description": "Todas mis pelis"
+        },
+        "c016" : {
+          "name": "Viajes",
+          "label": "viajes",
+          "description": "Viajes que hago con mis amigos"
+        }
       }
     },
-    "invoices" : {
-      "-KfH53O-33l9J6kjbvP8" : {
-        "individual" : true,
-        "name" : "123"
-      },
-      "-KfH5jnNVgeom4qlOOu0" : {
-        "individual" : true,
-        "name" : "1241266"
-      },
-      "-KfH5lJVKCf4yFbGNEdN" : {
-        "individual" : true,
-        "name" : "asdf"
+    "u002": {
+      "collections": {
+        "c015" : {
+          "name": "musica",
+          "label": "Música",
+          "description": "Toda mi colección de música"
+        }
+      }
+    },
+    "u003": {
+      "collections": {
+        "c004" : {
+          "name": "balones",
+          "label": "Balones",
+          "description": "Son los balones que tengo"  
+        },
+        "c010" : {
+          "name": "obras",
+          "label": "Obras",
+          "description": "Todas mis obras"
+        }
+      }
+    }
+  },
+
+
+  "collection_settings": {
+    "c001" : {
+      "font": "Times New Roman"
+    },
+    "c002" : {
+      "font": "Times New Roman"
+    },
+    "c003" : {
+      "font": "Times New Roman"
+    },
+    "c004" : {
+      "font": "Times New Roman"
+    },
+    "c005" : {
+      "font": "Times New Roman"
+    },
+    "c006" : {
+      "font": "Times New Roman"
+    },
+    "c007" : {
+      "font": "Times New Roman"
+    },
+    "c008" : {
+      "font": "Times New Roman"
+    },
+    "c009" : {
+      "font": "Times New Roman"
+    },
+    "c010" : {
+      "font": "Times New Roman"
+    },
+    "c011" : {
+      "font": "Times New Roman"
+    },
+    "c012" : {
+      "font": "Times New Roman"
+    },
+    "c013" : {
+      "font": "Times New Roman"
+    },
+    "c014" : {
+      "font": "Times New Roman"
+    },
+    "c015" : {
+      "font": "Times New Roman"
+    },
+    "c016" : {
+      "font": "Times New Roman"
+    }
+  },
+
+
+  "collection_items": {
+    "c001": {
+      "items": {
+        "i024": {
+          "primary_field": "El Corte Inglés 29x14",
+          "secondary_field": "Color verde con anillas"
+        }
+      }
+    },
+    "c003": {
+      "items": {
+        "i001": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i002": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i025": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i026": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i027": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i028": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i029": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i030": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i031": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i032": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i033": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i034": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i035": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i036": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i037": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i038": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i039": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i040": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i041": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i042": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i043": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i044": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i045": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i046": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i047": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i048": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i049": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i050": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i051": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i052": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i053": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i054": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i055": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i056": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i057": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i058": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i059": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i060": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i061": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i062": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i063": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i064": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i065": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i066": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i067": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i068": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i069": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i070": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i071": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i072": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i073": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i074": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i075": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i076": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i077": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i078": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i079": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i080": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i081": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i082": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i083": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i084": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        },
+        "i085": {
+          "primary_field": "F0034/2017",
+          "secondary_field": "Factura de China"
+        },
+        "i086": {
+          "primary_field": "F0036/2017",
+          "secondary_field": "Factura de Iberdrola"
+        }
+      }
+    },
+    "c002" : {
+      "items": {
+        "i003": {
+          "primary_field": "Acciona",
+          "secondary_field": ""
+        },
+        "i004": {
+          "primary_field": "Iberdrola",
+          "secondary_field": "C/ Ferraz 45"
+        },
+        "i005": {
+          "primary_field": "Meteologica",
+          "secondary_field": "C/ Costa Brava, 10"
+        }
+      }
+    },
+    "c005" : {
+      "items": {
+        "i008": {
+          "primary_field": "Cristiano Ronaldo",
+          "secondary_field": "Balón de Oro 2017"
+        },
+        "i007": {
+          "primary_field": "Lionel Messi",
+          "secondary_field": ""
+        }
+      }
+    },
+    "c013" : {
+      "items": {
+        "i006": {
+          "primary_field": "Madrid",
+          "secondary_field": ""
+        },
+        "i010": {
+          "primary_field": "Barcelona",
+          "secondary_field": ""
+        },
+        "i011": {
+          "primary_field": "Lisboa",
+          "secondary_field": "Portugal"
+        },
+        "i012": {
+          "primary_field": "París",
+          "secondary_field": ""
+        },
+        "i013": {
+          "primary_field": "Budapest",
+          "secondary_field": ""
+        },
+        "i014": {
+          "primary_field": "Burdeos",
+          "secondary_field": ""
+        },
+        "i015": {
+          "primary_field": "Londres",
+          "secondary_field": ""
+        },
+        "i016": {
+          "primary_field": "San José",
+          "secondary_field": ""
+        },
+        "i017": {
+          "primary_field": "Asunción",
+          "secondary_field": ""
+        },
+        "i018": {
+          "primary_field": "Lyon",
+          "secondary_field": ""
+        },
+        "i019": {
+          "primary_field": "Sevilla",
+          "secondary_field": ""
+        },
+        "i020": {
+          "primary_field": "Palma de Mallorca",
+          "secondary_field": ""
+        },
+        "i021": {
+          "primary_field": "Jaén",
+          "secondary_field": ""
+        },
+        "i022": {
+          "primary_field": "Gran Canaria",
+          "secondary_field": ""
+        },
+        "i023": {
+          "primary_field": "Salzburgo",
+          "secondary_field": ""
+        }
+      }
+    }
+  },
+
+  "collection_fields": {
+    "c001": {
+      "fields": {
+        "f001": {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "notnull": true
+        }
+      }
+    }
+  },
+
+
+  "collection_users": {
+    "c001": {
+      "users": {
+        "101309302582172320804": true,
+        "u002": true
+      }
+    },
+    "c002": {
+      "users": {
+        "101309302582172320804": true,
+        "u003": true
+      }
+    },
+    "c003": {
+      "users": {
+        "u002": true,
+        "u003": true
+      }
+    },
+    "c004": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c005": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c006": {
+      "users": {
+        "u002": true
+      }
+    },
+    "c007": {
+      "users": {
+        "101309302582172320804": true,
+        "u002": true
+      }
+    },
+    "c008": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c009": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c010": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c011": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c012": {
+      "users": {
+        "101309302582172320804": true,
+        "u002": true,
+        "u003": true
+      }
+    },
+    "c013": {
+      "users": {
+        "101309302582172320804": true
+      }
+    },
+    "c014": {
+      "users": {
+        "u002": true,
+        "u003": true
+      }
+    },
+    "c015": {
+      "users": {
+        "u003": true,
+        "u002": true
+      }
+    },
+    "c016": {
+      "users": {
+        "101309302582172320804": true,
+        "u003": true
+      }
+    }
+  },
+
+
+  "user_preferences": {
+    "101309302582172320804": {
+      "color": "#000000"  
+    },
+    "u002": {
+      "color": "#0000FF" 
+    },
+    "u003": {
+      "color": "#00FF00" 
+    }
+  },
+
+
+  "item_values": {
+    "i003": {
+      "fields": {
+        "f001": {
+          "v1": "Acciona"
+        }
       }
     }
   }
+
 }

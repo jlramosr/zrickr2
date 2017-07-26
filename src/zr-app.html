@@ -11,8 +11,6 @@
 
 <link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="zr-backend-data.html">
-
 <link rel="lazy-import" href="zr-dashboard.html">
 <link rel="lazy-import" href="zr-profile.html">
 <link rel="lazy-import" href="zr-catalog.html">
@@ -69,34 +67,26 @@
       <!-- Main content -->
       <app-header-layout>
 
-        <!--<app-header slot="header" condenses reveals effects="waterfall">
-          <app-toolbar>
-            <paper-icon-button icon="zr-app-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>[[appName]]</div>
-          </app-toolbar>
-        </app-header>-->
-
         <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="page-404">
 
           <zr-dashboard
             name="dashboard"
             app-name="[[appName]]"
-            data="[[data]]"
+            user-id="[[user.id]]"
             small-screen="[[smallScreen]]"
             medium-screen="[[mediumScreen]]"></zr-dashboard>
 
           <zr-catalog
             name="catalog"
             default-action="list"
-            data="[[data]]"
+            user-id="[[user.id]]"
             route="[[subroute]]"
             small-screen="[[smallScreen]]"
             medium-screen="[[mediumScreen]]"></zr-catalog>
 
           <zr-profile
             name="profile"
-            user="[[user]]"
-            data="[[data]]"
+            user-id="[[user.id]]"
             small-screen="[[smallScreen]]"
             medium-screen="[[mediumScreen]]"></zr-profile>
 
@@ -106,11 +96,6 @@
 
       </app-header-layout>
     </app-drawer-layout>
-
-    <zr-backend-data
-      id="backend"
-      path="[[_getDatabasePath(user.uid)]]"
-      document="{{data}}"></zr-backend-data>
 
   </template>
 
@@ -127,8 +112,6 @@
           appName: String,
 
           user: Object,
-
-          data: Object,
 
           _page: {
             type: String,
@@ -147,10 +130,6 @@
           mediumScreen: Boolean
 
         };
-      }
-
-      _getDatabasePath(userUid) {
-        return '/' + userUid;
       }
 
       _checkActiveRoute(route) {
