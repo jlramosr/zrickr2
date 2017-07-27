@@ -4,6 +4,7 @@
 <link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="zr-styles.html">
+<link rel="import" href="zr-common.html">
 
 <dom-module id="zr-tmpl-page-layout">
   <template>
@@ -12,18 +13,18 @@
         display: block;
         height: 100vh;
         overflow: hidden;
-      }
+      } 
     </style>
 
     <div class="header">
 
-      <div class="toolbar">
+      <div class="toolbar" style$="[[_computeStyleToolbar(colorToolbar)]]">
 
         <div class="toolbar__info">
           <paper-icon-button
             icon="zr-app-icons:menu"
             class="toolbar__icon"
-            hidden$="[[!menu]]"
+            hidden$="[[!_showMenuIcon]]"
             on-click="_menuTapped"></paper-icon-button>
 
           <paper-icon-button
@@ -39,8 +40,11 @@
           </a>
 
           <iron-icon class="toolbar__img" icon$="zr-app-icons:[[icon]]" hidden$="[[!icon]]"></iron-icon>
-          <span class="toolbar__title">{{title}}</span>
+          <span class="toolbar__title">
+            {{title}}
+          </span>
           <paper-spinner-lite class="spinner--small" active="{{loading}}"></paper-spinner-lite>
+        
         </div>
 
         <div class="toolbar__actions">
@@ -71,9 +75,27 @@
             value: ''
           },
 
+          colorToolbar: String,
+
           icon: {
             type: String,
             value: ''
+          },
+
+          menu: {
+            type: Boolean,
+            value: false
+          },
+
+          _showMenuIcon: {
+            type: Boolean,
+            value: false,
+            computed: '_computeShowMenu(menu, _drawerOpened)'
+          },
+
+          _drawerOpened: {
+            type: Boolean,
+            value: true
           },
 
           close: {
@@ -93,6 +115,59 @@
           mediumScreen: Boolean
   
         }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        requestIdleCallback (_ => {
+          this._toggleListeners({enable: true});
+        });
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        requestIdleCallback (_ => {
+          this._toggleListeners({enable: false});
+        });
+      }
+
+      _toggleListeners({enable}) {
+        const m = enable ? 'addEventListener' : 'removeEventListener';
+
+        document.dispatchEvent(new CustomEvent('tmpl-page-connected', {detail: {}}));
+        document[m]('drawer-toggle', this._drawerChanged.bind(this));
+      }
+
+      _computeStyleToolbar(colorToolbar) {
+        const isDarkToolbar = ZRCommon.isDarkColor(colorToolbar);
+        let style = '';
+
+        if (colorToolbar) {
+          style = `
+            background: ${colorToolbar}; 
+            box-shadow: 0 4px 4px ${colorToolbar};
+          `;
+          if (!isDarkToolbar) {
+            style += 'color: var(--zr-dark-primary-color)';
+          }
+        }
+        return style;
+      }
+
+      _menuTapped() {
+        document.dispatchEvent(new CustomEvent('tmpl-page-menu-tapped', {detail: {}}));
+      }
+
+      _closeTapped() {
+        this.dispatchEvent(new CustomEvent('tmpl-page-close-tapped', {detail: {}}));
+      }
+
+      _drawerChanged(event) {
+        this._drawerOpened = event.detail.opened;
+      }
+
+      _computeShowMenu(menu, _drawerOpened) {
+        return menu && !_drawerOpened;
       }
 
     }

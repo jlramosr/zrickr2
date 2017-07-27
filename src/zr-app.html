@@ -11,6 +11,8 @@
 
 <link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
+<link rel="import" href="zr-styles.html">
+
 <link rel="lazy-import" href="zr-dashboard.html">
 <link rel="lazy-import" href="zr-profile.html">
 <link rel="lazy-import" href="zr-catalog.html">
@@ -18,34 +20,10 @@
 
 <dom-module id="zr-app">
   <template>
-    <style>
+
+    <style include="drawer-styles show-styles">
       :host {
         display: block;
-      }
-
-      app-header-layout {
-        position: relative;
-      }
-
-      app-drawer-layout:not([narrow]) [drawer-toggle] {
-        display: none;
-      }
-
-      .drawer-list {
-        margin: 0 20px;
-      }
-
-      .drawer-list a {
-        display: block;
-        padding: 0 16px;
-        text-decoration: none;
-        color: var(--app-secondary-color);
-        line-height: 40px;
-      }
-
-      .drawer-list a.iron-selected {
-        color: black;
-        font-weight: bold;
       }
     </style>
 
@@ -54,14 +32,64 @@
       pattern="/:page"
       tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout fullbleed>
+    <app-drawer-layout id="drawerLayout" responsive-width="720px" fullbleed>
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer">
-        <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[_page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home" href="dashboard">Home</a>
-          <a name="profile" href="account">Profile</a>
-        </iron-selector>
+      <app-drawer id="drawer" class="drawer" slot="drawer" opened="{{drawerOpened}}">
+
+        <div class="drawer__toolbar">
+
+          <paper-icon-button
+            icon="zr-app-icons:close"
+            class="drawer__icon--menu"
+            on-click="_menuTapped"
+            hidden$="[[smallScreen]]"
+            tabindex="-1"></paper-icon-button>
+
+          <div class="drawer__user">
+
+            <img class="user__photo" hidden$="[[!user.photo]]" src="[[user.photo]]" alt="photo"></img>
+            <iron-icon class="user__photo" hidden$="[[user.photo]]" icon="zr-app-icons:account-circle"></iron-icon>
+
+            <div class="user__info">
+              [[user.name]]
+              [[user.email]]
+            </div>
+
+          </div>
+        </div>
+      
+        <div class="drawer__list">
+
+          <div class="drawer__list--up">
+            <a class="drawer__link" href="/dashboard">
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:home"></iron-icon>
+              Home
+            </a>
+          </div>
+
+          <div class="drawer__separator"></div>
+
+          <div class="drawer__list--down">
+            <a class="drawer__link" href="/profile">
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:settings"></iron-icon>
+              Settings
+            </a>
+            <a class="drawer__link" href="/dashboard#">
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:delete"></iron-icon>
+              Bin
+            </a>
+            <a class="drawer__link" href="/dashboard#">
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:help"></iron-icon>
+              Help & Feedback
+            </a>
+            <a class="drawer__link" on-click="_logoutTapped">
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:power-settings-new"></iron-icon>
+              Logout
+            </a>
+          </div>
+
+        </div>
+
       </app-drawer>
 
       <!-- Main content -->
@@ -130,6 +158,50 @@
           mediumScreen: Boolean
 
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        requestIdleCallback (_ => {
+          this._toggleListeners({enable: true});
+        });
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        requestIdleCallback (_ => {
+          this._toggleListeners({enable: false});
+        });
+      }
+
+      _toggleListeners({enable}) {
+        const m = enable ? 'addEventListener' : 'removeEventListener';
+
+        // drawer processes.
+        this.$.drawer[m]('opened-changed', this._drawerOpenedChanged.bind(this));
+        document[m]('tmpl-page-connected', this._drawerOpenedChanged.bind(this));
+        document[m]('tmpl-page-menu-tapped', this._menuTapped.bind(this));
+
+      }
+
+      _drawerOpenedChanged(event) {
+        document.dispatchEvent(new CustomEvent('drawer-toggle', 
+          {detail: {'opened': this.$.drawer.opened}})
+        );
+      }
+
+      _menuTapped(event) {
+        const drawerLayout = this.$.drawerLayout;
+        const drawer = this.$.drawer;
+        drawer.toggle();
+
+        if (drawer.opened) {
+          // remove mobile mode.
+          drawerLayout.forceNarrow = false;
+        } else {
+          // mobile mode.
+          drawerLayout.forceNarrow = true;
+        }
       }
 
       _checkActiveRoute(route) {

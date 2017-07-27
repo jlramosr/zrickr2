@@ -46,10 +46,10 @@
   }
 </style>
 
-<dom-module id="drawer-layout-styles">
+<dom-module id="drawer-styles">
   <template>
     <style>
-      .layout__drawer {
+      .drawer {
         --app-drawer-content-container: {
           height: 100%;
           border-right: 1px solid #888;
@@ -150,87 +150,12 @@
         color: var(--secondary-color);
       }
 
-      .layout__header {
-        height: var(--zr-primary-toolbar-height);
-        padding: 0;
-        background: var(--background-toolbar, var(--zr-primary-color));
-        color: var(--color-toolbar, #fff);
-        --app-header-shadow: {
-          box-shadow: inset 0px 0px 0px 0px var(--primary-color);
-        };
-        --app-header-background-rear-layer: {
-          /* The header when condensed */
-          background-color: var(--zr-primary-color);
-        };
-      }
-
-      .header__toolbar {
-        @apply --layout-horizontal;
-        @apply --layout-center-center;
-        height: var(--zr-primary-toolbar-height);
-      }
-
-      .toolbar__info {
-        @apply --layout-horizontal;
-        @apply --layout-flex;
-      }
-
-      .toolbar__info--center {
-        @apply --layout-center-center;
-      }
-
-      .toolbar__info--left {
-        @apply --layout-center;
-      }
-
-      .toolbar__info__logo {
-        margin-right: 4px;
-        height: 24px;
-        width: 24px;
-        min-height: 24px;
-        min-width: 24px;
-      }
-
-      .toolbar__icon {
-        height: 40px;
-        width: 40px;
-        min-height: 40px;
-        min-width: 40px;
-        margin: 3px 0 0 0;
-        cursor: pointer;
-        color: #fff;
-      }
-
-      .toolbar__icon--menu {
-        margin-left: -8px;
-      }
-
-      .toolbar__icon--search {
-        margin-right: 0px;
-      }
-
-      /* make the content fit the size of its container */
-      .layout__content {
-        @apply --layout-vertical;
-        @apply --layout-fit;
-        top: var(--zr-primary-toolbar-height);
-      }
-
       @media (min-width: 720px) { 
-        .layout__header {
-          --app-header-background-rear-layer: {
-            background-color: var(--background-toolbar, var(--zr-primary-color));
-          };
-        }
-        .header__toolbar {
-          padding: 0 var(--zr-padding-medium);
-        }
       }
+
       @media (min-width: 1024px) { 
-        .header__toolbar {
-          padding: 0 var(--zr-padding-large);
-        }
       }
+
     </style>
   </template>
 </dom-module>
@@ -303,12 +228,23 @@
         background: #fefefe;
       }
 
-      @media (min-width: 720px) { 
-        
+      @media (min-width: 720px) {
+        .toolbar__info {
+          padding: 24px;
+        }
+        .toolbar__actions {
+          padding: 24px;
+        }
       }
-      @media (min-width: 1024px) { 
-        
+      @media (min-width: 1024px) {
+        .toolbar__info {
+          padding: 42px;
+        }
+        .toolbar__actions {
+          padding: 42px;
+        }
       }
+
     </style>
   </template>
 </dom-module>
@@ -748,7 +684,7 @@
   <template>
     <style>
       .spinner--small {
-        --paper-spinner-color: var(--spinner-color, var(--zr-secondary-color));
+        --paper-spinner-color: var(--spinner-color, #fff);
         --paper-spinner-stroke-width: 1px;
         min-width: 28px;
         min-height: 28px;
