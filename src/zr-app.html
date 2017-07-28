@@ -12,6 +12,7 @@
 <link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="zr-styles.html">
+<link rel="import" href="zr-backend-data.html">
 
 <link rel="lazy-import" href="zr-dashboard.html">
 <link rel="lazy-import" href="zr-profile.html">
@@ -19,6 +20,14 @@
 <link rel="lazy-import" href="zr-page-404.html">
 
 <dom-module id="zr-app">
+
+  <style is="custom-style">
+    :root {
+      /* colors */
+      --zr-primary-color: blue;
+    }
+  </style>
+
   <template>
 
     <style include="drawer-styles show-styles">
@@ -31,6 +40,12 @@
       route="{{route}}"
       pattern="/:page"
       tail="{{subroute}}"></app-route>
+      
+    <zr-backend-data
+      id="backend"
+      document-path="[[_computeProfilePath(user.id)]]"
+      document-data="{{settings}}"
+      loading="{{loadingSettings}}"></zr-backend-data>
 
     <app-drawer-layout id="drawerLayout" responsive-width="720px" fullbleed>
       <!-- Drawer content -->
@@ -39,7 +54,7 @@
         <div class="drawer__toolbar">
 
           <paper-icon-button
-            icon="zr-app-icons:close"
+            icon="zr-app-icons:close-drawer"
             class="drawer__icon--menu"
             on-click="_menuTapped"
             hidden$="[[smallScreen]]"
@@ -75,7 +90,7 @@
               Settings
             </a>
             <a class="drawer__link" href="/dashboard#">
-              <iron-icon class="drawer__icon--list" icon="zr-app-icons:delete"></iron-icon>
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:bin"></iron-icon>
               Bin
             </a>
             <a class="drawer__link" href="/dashboard#">
@@ -83,7 +98,7 @@
               Help & Feedback
             </a>
             <a class="drawer__link" on-click="_logoutTapped">
-              <iron-icon class="drawer__icon--list" icon="zr-app-icons:power-settings-new"></iron-icon>
+              <iron-icon class="drawer__icon--list" icon="zr-app-icons:logout"></iron-icon>
               Logout
             </a>
           </div>
@@ -114,7 +129,9 @@
 
           <zr-profile
             name="profile"
-            user-id="[[user.id]]"
+            user="[[user]]"
+            profile="[[settings]]"
+            loading-profile="[[loadingSettings]]"
             small-screen="[[smallScreen]]"
             medium-screen="[[mediumScreen]]"></zr-profile>
 
@@ -140,6 +157,13 @@
           appName: String,
 
           user: Object,
+
+          settings: {
+            type: Object,
+            observer: '_settingsChanged'
+          },
+
+          loadingSettings: Boolean,
 
           _page: {
             type: String,
@@ -181,27 +205,11 @@
         this.$.drawer[m]('opened-changed', this._drawerOpenedChanged.bind(this));
         document[m]('tmpl-page-connected', this._drawerOpenedChanged.bind(this));
         document[m]('tmpl-page-menu-tapped', this._menuTapped.bind(this));
-
       }
 
-      _drawerOpenedChanged(event) {
-        document.dispatchEvent(new CustomEvent('drawer-toggle', 
-          {detail: {'opened': this.$.drawer.opened}})
-        );
-      }
-
-      _menuTapped(event) {
-        const drawerLayout = this.$.drawerLayout;
-        const drawer = this.$.drawer;
-        drawer.toggle();
-
-        if (drawer.opened) {
-          // remove mobile mode.
-          drawerLayout.forceNarrow = false;
-        } else {
-          // mobile mode.
-          drawerLayout.forceNarrow = true;
-        }
+      _computeProfilePath(userId) {
+        return userId ? 
+          `/user_preferences/${userId}` : null;
       }
 
       _checkActiveRoute(route) {
@@ -241,6 +249,38 @@
         // Load page import on demand
         const resolvedPageUrl = this.resolveUrl('zr-' + _page + '.html');
         Polymer.importHref(resolvedPageUrl, null, null, true);
+      }
+
+      _settingsChanged(settings) {
+        if (settings) {
+          let styleOverrided = document.createElement('style', 'custom-style');
+          styleOverrided.textContent = 
+            `:root {
+              ${settings.primary_color ? '--zr-primary-color:' + settings.primary_color + ';' : ''};
+              ${settings.secondary_color ? '--zr-secondary-color:' + settings.secondary_color + ';' : ''};
+            }`;
+          document.body.appendChild(styleOverrided);
+        }
+      }
+
+      _drawerOpenedChanged(event) {
+        document.dispatchEvent(new CustomEvent('drawer-toggle', 
+          {detail: {'opened': this.$.drawer.opened}})
+        );
+      }
+
+      _menuTapped(event) {
+        const drawerLayout = this.$.drawerLayout;
+        const drawer = this.$.drawer;
+        drawer.toggle();
+
+        if (drawer.opened) {
+          // remove mobile mode.
+          drawerLayout.forceNarrow = false;
+        } else {
+          // mobile mode.
+          drawerLayout.forceNarrow = true;
+        }
       }
 
     }

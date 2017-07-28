@@ -12,12 +12,14 @@
           "name": "clientes",
           "label": "Clientes",
           "description": "Clientes de la empresa",
-          "color": "#FF0000"
+          "color": "#ee0",
+          "noun": "cliente"
         },
         "c003" : {
           "name": "facturas",
           "label": "Facturas",
-          "description": "Facturas de la empresa"
+          "description": "Facturas de la empresa",
+          "color": "#304"
         },
         "c005" : {
           "name": "futbolistas",
@@ -620,13 +622,14 @@
 
   "user_preferences": {
     "101309302582172320804": {
-      "color": "#000000"  
+      "primary_color": "#0000FF",
+      "secondary_color": "#FF00FF"    
     },
     "u002": {
-      "color": "#0000FF" 
+      "primary_color": "#000000"  
     },
     "u003": {
-      "color": "#00FF00" 
+      "primary_color": "#00FF00" 
     }
   },
 

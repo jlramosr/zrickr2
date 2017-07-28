@@ -2,11 +2,14 @@
 
   window.ZRCommon = {
 
+    /* locations */
     updateWindowLocation(location) {
       window.history.replaceState(null, null, location);
       window.dispatchEvent(new CustomEvent('location-changed'));
     },
 
+
+    /* notifications */
     showMessage(message, type) {
       if (!message) {
         if (type == 'error' || type == 'warning') { message = 'An unknown error has occurred.'; }
@@ -17,6 +20,42 @@
       }));
     },
 
+
+    /* colors */
+    convertCode3To6(color) {
+      if (!color) { return null; }
+      if (color.length === 4) { // # + code
+        color = color.replace(color[1], color[1] + color[1]);
+        color = color.replace(color[3], color[3] + color[3]);
+        color = color.replace(color[5], color[5] + color[5]);
+      }
+      return color;
+    },
+
+    isDark(color) {
+      //https://stackoverflow.com/questions/12043187/how-to-check-if-hex-color-is-too-black
+      if (!color) { return null; }
+      let c = ZRCommon.convertCode3To6(color).substring(1);
+      const rgb = parseInt(c, 16);
+      const r = (rgb >> 16) & 0xff;
+      const g = (rgb >>  8) & 0xff;
+      const b = (rgb >>  0) & 0xff;
+
+      const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+      return luma < 40;
+    },
+
+    isWhite(color) {
+      if (!color) { return false; }
+      const colorLowerCase = color.toLowerCase();
+      return  colorLowerCase === '#ffffff' ||
+              colorLowerCase === '#fff' ||
+              colorLowerCase === 'white';
+    },
+
+
+    /* general functions */
     capitalize(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
@@ -25,20 +64,6 @@
       return JSON.parse(JSON.stringify(object));
     },
 
-    //https://stackoverflow.com/questions/12043187/how-to-check-if-hex-color-is-too-black
-    isDarkColor(c) {
-      var c = c.substring(1);      // strip #
-      var rgb = parseInt(c, 16);   // convert rrggbb to decimal
-      var r = (rgb >> 16) & 0xff;  // extract red
-      var g = (rgb >>  8) & 0xff;  // extract green
-      var b = (rgb >>  0) & 0xff;  // extract blue
-
-      var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
-
-      return luma < 40;
-    },
-
-    // Transform an object of objects in an array of objects.
     objectsToArray(_object) {
       if (!_object) return null;
       return Object.keys(_object).map(function(key) {

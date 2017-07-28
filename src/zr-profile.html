@@ -1,16 +1,27 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="zr-tmpl-page-layout.html">
+<link rel="import" href="zr-styles.html">
+
 <dom-module id="zr-profile">
   <template>
-    <style include="">
-      :host {
-        display: block;
-        height: 100vh;
-        background: #fefefe;
-      }
-    </style>
 
-    profile [[userId]]
+    <style include="content-styles list-styles"></style>
+
+    <zr-tmpl-page-layout menu title="Settings">
+
+      <zr-tmpl-button
+        slot="action"
+        label="SAVE"
+        icon="save"
+        on-click="_saveProfileTapped"
+        small="[[smallScreen]]"></zr-tmpl-button>
+
+      <div id="content" slot="content" class="content__page">
+        [[user.name]] [[profile.primary_color]]
+      </div>
+
+    </zr-tmpl-page-layout>
 
   </template>
 
@@ -23,13 +34,19 @@
       static get properties() {
         return {
 
-          userId: Object,
+          user: Object,
+
+          profile: Object,
 
           smallScreen: Boolean,
 
           mediumScreen: Boolean
   
         }
+      }
+
+      _saveProfileTapped() {
+        console.log("SAVE PROFILE TAPPED");
       }
 
     }

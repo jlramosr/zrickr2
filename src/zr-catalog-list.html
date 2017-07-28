@@ -19,22 +19,22 @@
 
     <zr-tmpl-page-layout 
       menu 
-      color-toolbar="[[collectionInfo.color]]"
+      toolbar-color="[[collectionInfo.color]]"
       title="[[collectionInfo.name]]" 
       loading="[[_computeLoading(loadingCollectionInfo, loadingItems)]]">
 
       <zr-tmpl-button
         slot="action"
-        label="NEW COLLECTION"
-        icon="add"
-        on-click="_newCollectionTapped"
+        label="[[_computeNewItem(collectionInfo)]]"
+        icon="add-item"
+        on-click="_newItemTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
         
       <zr-tmpl-button
         slot="action"
-        label="NEW COLLECTION"
-        icon="add"
-        on-click="_newCollectionTapped"
+        label="SETTINGS"
+        icon="settings-collection"
+        on-click="_settingsItemTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
 
       <div id="content" slot="content" class="content__list">
@@ -84,6 +84,14 @@
         }
       }
 
+      _newItemTapped() {
+        console.log("NEW ITEM TAPPED");
+      }
+
+      _settingsItemTapped() {
+        console.log("SETTINGS ITEM TAPPED");
+      }
+
       _computeItemsPath(collectionId) {
         return collectionId ? 
           `/collection_items/${collectionId}/items` : null;
@@ -96,6 +104,10 @@
       _computeUrlItem(collectionId, item) {
         const itemId = this.$.backend.getId(item);
         return `/catalog/${collectionId}/item/${itemId}`;
+      }
+
+      _computeNewItem(collectionInfo) {
+        return 'NEW ' + (collectionInfo.noun ? collectionInfo.noun.toUpperCase() : 'ITEM');
       }
 
       _notifyResize() {

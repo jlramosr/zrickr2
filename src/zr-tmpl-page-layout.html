@@ -13,12 +13,12 @@
         display: block;
         height: 100vh;
         overflow: hidden;
-      } 
+      }
     </style>
 
     <div class="header">
 
-      <div class="toolbar" style$="[[_computeStyleToolbar(colorToolbar)]]">
+      <div class="toolbar" style$="[[_computeStyleToolbar(_isDarkToolbar)]]">
 
         <div class="toolbar__info">
           <paper-icon-button
@@ -43,7 +43,7 @@
           <span class="toolbar__title">
             {{title}}
           </span>
-          <paper-spinner-lite class="spinner--small" active="{{loading}}"></paper-spinner-lite>
+          <paper-spinner-lite class$="spinner--small [[_computeColorSpinner(_isDarkToolbar)]]" active="{{loading}}"></paper-spinner-lite>
         
         </div>
 
@@ -75,7 +75,12 @@
             value: ''
           },
 
-          colorToolbar: String,
+          toolbarColor: String,
+
+          _isDarkToolbar: {
+            type: Boolean,
+            computed: '_computeIsDarkToolbar(toolbarColor)'
+          },
 
           icon: {
             type: String,
@@ -138,22 +143,6 @@
         document[m]('drawer-toggle', this._drawerChanged.bind(this));
       }
 
-      _computeStyleToolbar(colorToolbar) {
-        const isDarkToolbar = ZRCommon.isDarkColor(colorToolbar);
-        let style = '';
-
-        if (colorToolbar) {
-          style = `
-            background: ${colorToolbar}; 
-            box-shadow: 0 4px 4px ${colorToolbar};
-          `;
-          if (!isDarkToolbar) {
-            style += 'color: var(--zr-dark-primary-color)';
-          }
-        }
-        return style;
-      }
-
       _menuTapped() {
         document.dispatchEvent(new CustomEvent('tmpl-page-menu-tapped', {detail: {}}));
       }
@@ -168,6 +157,30 @@
 
       _computeShowMenu(menu, _drawerOpened) {
         return menu && !_drawerOpened;
+      }
+
+      _computeIsDarkToolbar(toolbarColor) {
+        return ZRCommon.isDark(toolbarColor);
+      }
+
+      _computeStyleToolbar(_isDarkToolbar) {
+        let style = '';
+        const color = this.toolbarColor;
+
+        if (color) {
+          style = `
+            background: ${color};
+            box-shadow: 0 4px 4px ${ZRCommon.isWhite(color) ? '#ddd': color};
+          `;
+          if (!_isDarkToolbar) {
+            style += 'color: var(--zr-dark-primary-color)';
+          }
+        }
+        return style;
+      }
+
+      _computeColorSpinner(_isDarkToolbar) {
+        return _isDarkToolbar === false ? 'spinner--small-dark' : '';
       }
 
     }

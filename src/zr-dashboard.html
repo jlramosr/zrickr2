@@ -17,12 +17,15 @@
       set-data="{{_collections}}"
       loading="{{loadingCollections}}"></zr-backend-data>
 
-    <zr-tmpl-page-layout menu title="[[appName]]" loading="[[loadingCollections]]">
+    <zr-tmpl-page-layout
+      menu
+      title="[[appName]]"
+      loading="[[loadingCollections]]">
 
       <zr-tmpl-button
         slot="action"
         label="NEW COLLECTION"
-        icon="add"
+        icon="add-collection"
         on-click="_newCollectionTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
 
@@ -69,6 +72,10 @@
           mediumScreen: Boolean
   
         }
+      }
+
+      _newCollectionTapped() {
+        console.log("NEW COLLECTION TAPPED");
       }
 
       _computeCollectionsPath(userId) {

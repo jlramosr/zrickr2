@@ -4,25 +4,32 @@
 
 <style is="custom-style">
   :root {
-    /* colors */
+    /* application colors */
+    --zr-app-primary-color: var(--paper-blue-grey-700);
+    --zr-app-secondary-color: #DD6F00;
+
+    /*  Default colors if user has not preferences.
+        If users has them, these values will be overriden.
+     */
     --zr-primary-dark-color: var(--paper-blue-grey-800);
-    --zr-primary-color: var(--paper-blue-grey-700);
+    --zr-primary-color: var(--zrickr-primary-color);
     --zr-primary-soft-color: var(--paper-blue-grey-500);
     --zr-primary-light-color: var(--paper-blue-grey-200);
-    --zr-secondary-color: #DD6F00;
+    --zr-secondary-color: var(--zr-app-secondary-color);
     --zr-accent-color: #FFDFCC;
     --zr-error-color: var(--paper-red-900);
     --zr-background-color: #f2f2f2;
 
+    --zr-dialog-color: var(--zr-primary-color);
+    --zr-dialog-background-color: #fff;
+
+    /* sizes */
     --zr-responsive-small: 720px;
     --zr-responsive-medium: 1024px;
 
     --zr-drawer-toolbar-height: 100px;
     --zr-primary-toolbar-height: 50px;
     --zr-secondary-toolbar-height: 50px;
-
-    --zr-dialog-color: var(--zr-primary-color);
-    --zr-dialog-background-color: #fff;
 
     --zr-padding-small: 16px;
     --zr-padding-medium: 54px;
@@ -33,16 +40,6 @@
     --secondary-color: var(--zr-secondary-color);
     --accent-color: var(--zr-accent-color);
     --error-color: var(--zr-error-color);
-
-    /* mixins */
-    --unselectable: {
-      -moz-user-select: -moz-none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
-      -o-user-select: none;
-      user-select: none;
-    }
-
   }
 </style>
 
@@ -62,6 +59,7 @@
       .drawer__toolbar {
         @apply --layout-horizontal;
         @apply --layout-center;
+        position: relative;
         max-width: 100%;
         height: var(--zr-drawer-toolbar-height);
         color: var(--zr-primary-color);
@@ -99,7 +97,7 @@
       .drawer__separator {
         border: 0;
         height: 1px;
-        background: var(--secondary-color);
+        background: var(--zr-secondary-color);
         background: -webkit-gradient(linear, left top, right top, color-stop(0%,#fff), color-stop(50%,#888), color-stop(100%,#fff));
         background: -webkit-linear-gradient(left, #fff 0%, #888 50%, #fff 100%);
         background: -moz-linear-gradient(left, #fff 0%, #888 50%, #fff 100%);
@@ -118,7 +116,7 @@
         @apply --layout-center;
         @apply --layout-flex;
         padding: 8px 20px;
-        color: var(--primary-color);
+        color: var(--zr-primary-color);
         cursor: pointer;
         font-size: 11px;
         text-decoration: none;
@@ -140,6 +138,9 @@
       }
 
       .drawer__icon--menu {
+        position: absolute;
+        top: 5px;
+        right: 5px;
         width: 32px;
         height: 32px;
         min-width: 32px;
@@ -147,7 +148,7 @@
       }
 
       .drawer__icon--menu:hover {
-        color: var(--secondary-color);
+        color: var(--zr-secondary-color);
       }
 
       @media (min-width: 720px) { 
@@ -178,8 +179,8 @@
         width: 100%;
         height: var(--zr-primary-toolbar-height);
         color: #fff;
-        box-shadow: 0 4px 4px var(--primary-color);
-        background-color: var(--primary-color);
+        box-shadow: 0 4px 4px var(--zr-primary-color);
+        background-color: var(--zr-primary-color);
       }
 
       .toolbar__info {
@@ -195,7 +196,6 @@
         height: 40px;
         width: 40px;
         min-width: 40px;
-        color: #fff;
       }
 
       .toolbar__icon {
@@ -203,7 +203,6 @@
         height: 40px;
         width: 40px;
         min-width: 40px;
-        color: #fff;
       }
 
       .toolbar__title {
@@ -343,7 +342,7 @@
         height: 32px;
         width: 32px;
         min-width: 32px;
-        color: var(--color-icon, #fff);
+
       }
     </style>
   </template>
@@ -385,7 +384,7 @@
         right: 0;
         bottom: 0;
         padding: 0 16px;
-        color: var(--secondary-color);
+        color: var(--zr-secondary-color);
         font-size: 12px;
         pointer-events: none;
       }
@@ -484,7 +483,7 @@
 
       .table__item--primary-text {
         font-size: 18px;
-        color: var(--primary-color);
+        color: var(--zr-primary-color);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -492,7 +491,7 @@
 
       .grid__item--primary-text {
         font-size: 18px;
-        color: var(--primary-color);
+        color: var(--zr-primary-color);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -520,7 +519,7 @@
           width: 40px;
           min-height: 40px;
           min-width: 40px;
-          color: var(--primary-color);
+          color: var(--zr-primary-color);
           opacity: 0.8;
         }
       }
@@ -531,7 +530,7 @@
           width: 40px;
           min-height: 40px;
           min-width: 40px;
-          color: var(--primary-color);
+          color: var(--zr-primary-color);
           opacity: 0.8;
         }
       }
@@ -594,7 +593,7 @@
         height: 48px;
         width: 48px;
         opacity: 0.1;
-        color: var(--secondary-color);
+        color: var(--zr-secondary-color);
       }
 
       .form__input {
@@ -622,7 +621,7 @@
 
       .form__radio-button {
         margin-left: 12px;
-        --paper-radio-button-checked-color: var(--secondary-color);
+        --paper-radio-button-checked-color: var(--zr-secondary-color);
         --paper-radio-button-size: 24px;
         --paper-radio-button-label-spacing: 4px;
       }
@@ -690,8 +689,12 @@
         min-height: 28px;
       }
 
+      .spinner--small-dark {
+        --paper-spinner-color: var(--zr-primary-dark-color, #000);
+      }
+
       .spinner--big {
-        --paper-spinner-color: var(--spinner-color, var(--secondary-color));
+        --paper-spinner-color: var(--spinner-color, var(--zr-app-secondary-color));
         --paper-spinner-stroke-width: 1px;
         position: absolute;
         z-index: -45;
@@ -717,7 +720,7 @@
         height: 100px;
         text-align: center;
         font-weight: 300;
-        color: var(--spinner-color, var(--secondary-color));
+        color: var(--spinner-color, var(--zr-app-secondary-color));
       }
     </style>
   </template>
