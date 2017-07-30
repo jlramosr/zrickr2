@@ -118,6 +118,7 @@
 
         // common properties.
         this._currentElement.appName = this.appName;
+        this._currentElement.user = this.user;
         this._currentElement.route = this.route;
         this._currentElement.smallScreen = this.smallScreen;
         this._currentElement.mediumScreen = this.mediumScreen;
@@ -130,13 +131,14 @@
       }
 
       _appendAppElement() {
-        this._prepareElement('app');
+        const elementName = 'app'
+
+        this._prepareElement(elementName);
 
         // local properties.
-        this._currentElement.user = this.user;
         this._currentElement.defaultPage = 'dashboard';
 
-        this._appendElement('app');
+        this._appendElement(elementName);
 
         // local listeners.
         document.addEventListener('logout-tapped', event => {
@@ -153,12 +155,14 @@
       }
 
       _appendGuestElement() {
-        this._prepareElement('guest');
+        const elementName = 'app';
+
+        this._prepareElement(elementName);
         
         // local properties.
         this._currentElement.defaultPage = 'product';
 
-        this._appendElement('guest');
+        this._appendElement(elementName);
 
         // local listeners.
         document.addEventListener('login-tapped', event => {

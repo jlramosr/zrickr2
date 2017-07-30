@@ -6,10 +6,26 @@
 <link rel="import" href="zr-common.html">
 <link rel="import" href="zr-styles.html">
 
+<link rel="lazy-import" href="zr-tmpl-button.html">
+<link rel="lazy-import" href="zr-catalog-overlay-new.html">
+
 <dom-module id="zr-dashboard">
   <template>
 
-    <style include="content-styles list-styles"></style>
+    <style include="content-styles list-styles show-styles">
+      .empty {
+        text-align: center;
+        border: 1px solid green;
+        border-radius: 4px;
+        margin: 16px;
+        padding: 32px 16px;
+        box-shadow: 0 4px 4px var(--zr-primary-color);
+      }
+      .empty__image {
+        width: 96px;
+        height: 96px;
+      }
+    </style>
 
     <zr-backend-data
       id="backend"
@@ -26,12 +42,18 @@
         slot="action"
         label="NEW COLLECTION"
         icon="add-collection"
+        hidden$="[[_computeShowEmptyContent(_collections)]]"
         on-click="_newCollectionTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
 
       <div id="content" slot="content" class="content__list">
 
-        <iron-list id="ironList" items="[[_collections]]" class="list" as="collection">
+        <iron-list 
+          id="ironList"
+          hidden$="[[_computeShowEmptyContent(_collections)]]"
+          items="[[_collections]]"
+          class="list"
+          as="collection">
           <template>
             <div class$="table__item-container [[_notifyResize(index, _collections.length)]]">
               <a class="table__item" href="[[_computeUrlCollection(collection)]]">
@@ -44,9 +66,25 @@
           </template>
         </iron-list>
 
+        <div class="empty" hidden$="[[!_computeShowEmptyContent(_collections)]]">
+          <img class="empty__image" src="../images/empty.jpg">
+          <h3>You don't have any collection yet.</h3>
+          <h4>Create your first one now, what would you say??</h4>
+          <zr-tmpl-button
+            label="CREATE MY FIRST COLLECTION"
+            on-click="_newCollectionTapped"></zr-tmpl-button>
+        </div>
+
       </div>
 
     </zr-tmpl-page-layout>
+
+    <zr-catalog-overlay-new 
+      id="newCollectionOverlay"
+      always-on-top
+      no-cancel-on-outside-click
+      small-screen="[[smallScreen]]"
+      medium-screen="[[mediumScreen]]"></zr-catalog-overlay-new>
 
   </template>
 
@@ -75,7 +113,7 @@
       }
 
       _newCollectionTapped() {
-        console.log("NEW COLLECTION TAPPED");
+        this.$.newCollectionOverlay.open();
       }
 
       _computeCollectionsPath(userId) {
@@ -86,6 +124,10 @@
       _computeUrlCollection(collection) {
         const collectionId = this.$.backend.getId(collection);
         return `/catalog/${collectionId}`;
+      }
+
+      _computeShowEmptyContent(_collections) {
+        return !_collections || !_collections.length;
       }
 
       _notifyResize() {

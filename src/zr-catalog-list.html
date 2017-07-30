@@ -6,6 +6,9 @@
 <link rel="import" href="zr-common.html">
 <link rel="import" href="zr-styles.html">
 
+<link rel="lazy-import" href="zr-tmpl-button.html">
+<link rel="lazy-import" href="zr-catalog-item-overlay-new.html">
+
 <dom-module id="zr-catalog-list">
   <template>
 
@@ -56,6 +59,14 @@
 
     </zr-tmpl-page-layout>
 
+    <zr-catalog-item-overlay-new 
+      id="newItemOverlay"
+      always-on-top
+      no-cancel-on-outside-click
+      collection-info="[[collectionInfo]]"
+      small-screen="[[smallScreen]]"
+      medium-screen="[[mediumScreen]]"></zr-catalog-item-overlay-new>
+
   </template>
 
   <script>
@@ -85,11 +96,11 @@
       }
 
       _newItemTapped() {
-        console.log("NEW ITEM TAPPED");
+        this.$.newItemOverlay.open();
       }
 
       _settingsItemTapped() {
-        console.log("SETTINGS ITEM TAPPED");
+        ZRCommon.updateWindowLocation('/catalog/' + this.collectionId + '/settings');
       }
 
       _computeItemsPath(collectionId) {

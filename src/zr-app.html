@@ -21,13 +21,6 @@
 
 <dom-module id="zr-app">
 
-  <style is="custom-style">
-    :root {
-      /* colors */
-      --zr-primary-color: blue;
-    }
-  </style>
-
   <template>
 
     <style include="drawer-styles show-styles">
@@ -54,21 +47,30 @@
         <div class="drawer__toolbar">
 
           <paper-icon-button
-            icon="zr-app-icons:close-drawer"
-            class="drawer__icon--menu"
+            icon="zr-app-icons:pin-drawer"
+            class="drawer__icon--pin"
             on-click="_menuTapped"
             hidden$="[[smallScreen]]"
             tabindex="-1"></paper-icon-button>
 
           <div class="drawer__user">
 
-            <img class="user__photo" hidden$="[[!user.photo]]" src="[[user.photo]]" alt="photo"></img>
-            <iron-icon class="user__photo" hidden$="[[user.photo]]" icon="zr-app-icons:account-circle"></iron-icon>
+            <img 
+              class="user__photo"
+              hidden$="[[!user.photo]]"
+              src="[[user.photo]]"
+              alt="photo"></img>
+            <iron-icon
+              class="user__photo user__photo--guest"
+              hidden$="[[user.photo]]"
+              icon="zr-app-icons:account"></iron-icon>
 
-            <div class="user__info">
+            <div class="user__info" hidden$="[[!user]]">
               [[user.name]]
               [[user.email]]
             </div>
+
+            <div class="user__info" hidden$="[[user]]">Guest</div>
 
           </div>
         </div>
@@ -205,6 +207,15 @@
         this.$.drawer[m]('opened-changed', this._drawerOpenedChanged.bind(this));
         document[m]('tmpl-page-connected', this._drawerOpenedChanged.bind(this));
         document[m]('tmpl-page-menu-tapped', this._menuTapped.bind(this));
+
+        // all clics on drawer links makes drawer closes if it's not fixed.
+        for (let link of this.shadowRoot.querySelectorAll('.drawer__link')) {
+          link.addEventListener('click', _ => {
+            if (this.smallScreen) {
+              this.$.drawer.close();
+            }
+          });
+        }
       }
 
       _computeProfilePath(userId) {
@@ -256,8 +267,8 @@
           let styleOverrided = document.createElement('style', 'custom-style');
           styleOverrided.textContent = 
             `:root {
-              ${settings.primary_color ? '--zr-primary-color:' + settings.primary_color + ';' : ''};
-              ${settings.secondary_color ? '--zr-secondary-color:' + settings.secondary_color + ';' : ''};
+              ${settings.primary_color ? '--zr-primary-color:' + settings.primary_color + ';' : ''}
+              ${settings.secondary_color ? '--zr-secondary-color:' + settings.secondary_color + ';' : ''}
             }`;
           document.body.appendChild(styleOverrided);
         }

@@ -129,7 +129,7 @@
         
         // redirect to defaultAction if there is no action.
         if (!action || action === '') {
-          ZRCommon.updateWindowLocation('/catalog/' + collectionId + '/' + this.defaultAction);
+          ZRCommon.updateWindowLocation(route.prefix + route.path + '/' + this.defaultAction);
           return;
         }
 

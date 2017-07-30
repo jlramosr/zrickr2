@@ -1,0 +1,97 @@
+<link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-backdrop.html">
+
+<link rel="import" href="zr-styles.html">
+<link rel="import" href="zr-tmpl-button.html">
+<link rel="import" href="zr-tmpl-page-layout.html">
+
+<dom-module id="zr-catalog-overlay-new">
+  <template>
+
+    <style include="content-styles">
+      :host {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 200;
+      }
+    </style>
+
+    <zr-tmpl-page-layout
+      id="template"
+      close 
+      title="New Collection">
+
+      <zr-tmpl-button
+        slot="action"
+        label="CREATE"
+        icon="save"
+        on-click="_createCollectionTapped"
+        small="[[smallScreen]]"></zr-tmpl-button>
+
+      <div id="content" slot="content" class="content__page">
+        
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+      </div>
+
+    </zr-tmpl-page-layout>
+
+  </template>
+
+  <script>
+    class ZRCatalogOverlayNew extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior], Polymer.Element) {
+
+      static get is() { return 'zr-catalog-overlay-new'; }
+
+      static get properties() {
+        return {
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean
+
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        requestIdleCallback (_ => {
+          this._toggleListeners({enable: true});
+        });
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        requestIdleCallback (_ => {
+          this._toggleListeners({enable: false});
+        });
+      }
+
+      _toggleListeners({enable}) {
+        const m = enable ? 'addEventListener' : 'removeEventListener';
+        this.$.template[m]('tmpl-page-close-tapped', this._closeTapped.bind(this));
+      }
+
+      _closeTapped(event) {
+        this.close();
+      } 
+
+      _computeItemInfoPath(collectionId,itemId) {
+        return collectionId && itemId ? 
+          `/collection_items/${collectionId}/items/${itemId}` : null;
+      }
+
+    }
+
+    window.customElements.define(ZRCatalogOverlayNew.is, ZRCatalogOverlayNew);
+
+  </script>
+</dom-module>

@@ -12,7 +12,7 @@
         If users has them, these values will be overriden.
      */
     --zr-primary-dark-color: var(--paper-blue-grey-800);
-    --zr-primary-color: var(--zrickr-primary-color);
+    --zr-primary-color: var(--zr-app-primary-color);
     --zr-primary-soft-color: var(--paper-blue-grey-500);
     --zr-primary-light-color: var(--paper-blue-grey-200);
     --zr-secondary-color: var(--zr-app-secondary-color);
@@ -86,6 +86,10 @@
         border-radius: 50%;
       }
 
+      .user__photo--guest {
+        margin-left: 0px;
+      }
+
       .drawer__list {
         @apply --layout-vertical;
       }
@@ -137,17 +141,18 @@
         min-height: 16px;
       }
 
-      .drawer__icon--menu {
+      .drawer__icon--pin {
         position: absolute;
         top: 5px;
-        right: 5px;
+        right: 3px;
+        opacity: 0.6;
         width: 32px;
         height: 32px;
         min-width: 32px;
         min-height: 32px;
       }
 
-      .drawer__icon--menu:hover {
+      .drawer__icon--pin:hover {
         color: var(--zr-secondary-color);
       }
 
@@ -295,8 +300,8 @@
         display: inline-block;
         cursor: pointer;
         margin: 0 2px;
-        border: 0;
-        border-radius: 3px;
+        border: solid 1px var(--border-color-button, var(--zr-primary-color));
+        border-radius: var(--border-radius-button, 30px);
         padding: 8px 10px;
         outline: 0;
         vertical-align: middle;
