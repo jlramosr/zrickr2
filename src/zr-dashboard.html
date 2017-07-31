@@ -12,26 +12,13 @@
 <dom-module id="zr-dashboard">
   <template>
 
-    <style include="content-styles list-styles show-styles">
-      .empty {
-        text-align: center;
-        border: 1px solid green;
-        border-radius: 4px;
-        margin: 16px;
-        padding: 32px 16px;
-        box-shadow: 0 4px 4px var(--zr-primary-color);
-      }
-      .empty__image {
-        width: 96px;
-        height: 96px;
-      }
-    </style>
+    <style include="content-styles list-styles show-styles"></style>
 
     <zr-backend-data
       id="backend"
       set-path="[[_computeCollectionsPath(userId)]]"
       set-data="{{_collections}}"
-      loading="{{loadingCollections}}"></zr-backend-data>
+      set-loading="{{loadingCollections}}"></zr-backend-data>
 
     <zr-tmpl-page-layout
       menu
@@ -42,11 +29,11 @@
         slot="action"
         label="NEW COLLECTION"
         icon="add-collection"
-        hidden$="[[_computeShowEmptyContent(_collections)]]"
+        hidden$="[[_computeShowEmptyContent(loadingCollections, _collections.length)]]"
         on-click="_newCollectionTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
 
-      <div id="content" slot="content" class="content__list">
+      <div slot="content" class="content__list">
 
         <iron-list 
           id="ironList"
@@ -58,7 +45,7 @@
             <div class$="table__item-container [[_notifyResize(index, _collections.length)]]">
               <a class="table__item" href="[[_computeUrlCollection(collection)]]">
                 <div class="table__item__detail">
-                  <span class="table__item--primary-text">[[collection.label]]</span>
+                  <span class="table__item--primary-text">[[collection.name]]</span>
                   <span class="table__item--secondary-text">[[collection.description]]</span>
                 </div>
               </a>
@@ -66,15 +53,15 @@
           </template>
         </iron-list>
 
-        <div class="empty" hidden$="[[!_computeShowEmptyContent(_collections)]]">
-          <img class="empty__image" src="../images/empty.jpg">
-          <h3>You don't have any collection yet.</h3>
-          <h4>Create your first one now, what would you say??</h4>
-          <zr-tmpl-button
-            label="CREATE MY FIRST COLLECTION"
-            on-click="_newCollectionTapped"></zr-tmpl-button>
-        </div>
+      </div>
 
+      <div slot="content" class="content__empty" hidden$="[[!_computeShowEmptyContent(loadingCollections, _collections.length)]]">
+        <img class="content__empty__image" src="../images/empty.jpg">
+        <h3>You don't have any collection yet.</h3>
+        <h4>Create your first one now, what would you say??</h4>
+        <zr-tmpl-button
+          label="CREATE MY FIRST COLLECTION"
+          on-click="_newCollectionTapped"></zr-tmpl-button>
       </div>
 
     </zr-tmpl-page-layout>
@@ -126,8 +113,8 @@
         return `/catalog/${collectionId}`;
       }
 
-      _computeShowEmptyContent(_collections) {
-        return !_collections || !_collections.length;
+      _computeShowEmptyContent(loadingCollections, _collectionsLength) {
+        return !loadingCollections && !_collectionsLength;
       }
 
       _notifyResize() {

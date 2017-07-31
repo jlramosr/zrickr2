@@ -12,13 +12,13 @@
 <dom-module id="zr-catalog-list">
   <template>
 
-    <style include="list-styles content-styles"></style>
+    <style include="list-styles content-styles show-styles"></style>
 
     <zr-backend-data
       id="backend"
       set-path="[[_computeItemsPath(collectionId)]]"
       set-data="{{items}}"
-      loading="{{loadingItems}}"></zr-backend-data>
+      set-loading="{{loadingItems}}"></zr-backend-data>
 
     <zr-tmpl-page-layout 
       menu 
@@ -28,7 +28,8 @@
 
       <zr-tmpl-button
         slot="action"
-        label="[[_computeNewItem(collectionInfo)]]"
+        label="NEW [[_computeCollectionNoun(collectionInfo.noun)]]"
+        hidden$="[[_computeShowEmptyContent(loadingItems, items.length)]]"
         icon="add-item"
         on-click="_newItemTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
@@ -40,7 +41,7 @@
         on-click="_settingsItemTapped"
         small="[[smallScreen]]"></zr-tmpl-button>
 
-      <div id="content" slot="content" class="content__list">
+      <div slot="content" class="content__list" hidden$="[[_computeShowEmptyContent(loadingItems, items.length)]]">
         
         <iron-list id="ironList" items="[[items]]" class="list" as="item">
           <template>
@@ -55,6 +56,15 @@
           </template>
         </iron-list>
 
+      </div>
+
+      <div slot="content" class="content__empty" hidden$="[[!_computeShowEmptyContent(loadingItems, items.length)]]">
+        <img class="content__empty__image" src="../images/empty.jpg">
+        <h3>You don't have any [[_computeCollectionNoun(collectionInfo.noun, 'lowercase')]] yet.</h3>
+        <h4>Create your first one now, come on!!</h4>
+        <zr-tmpl-button
+          label="CREATE MY FIRST [[_computeCollectionNoun(collectionInfo.noun)]]"
+          on-click="_newItemTapped"></zr-tmpl-button>
       </div>
 
     </zr-tmpl-page-layout>
@@ -117,8 +127,17 @@
         return `/catalog/${collectionId}/item/${itemId}`;
       }
 
-      _computeNewItem(collectionInfo) {
-        return 'NEW ' + (collectionInfo.noun ? collectionInfo.noun.toUpperCase() : 'ITEM');
+      _computeShowEmptyContent(loadingItems, itemsLength) {
+        console.log("LOADING:", loadingItems, "ITEMS:", itemsLength);
+        if (loadingItems) return false;
+        return !itemsLength;
+      }
+
+      _computeCollectionNoun(collectionNoun, lowercase) {
+        if (collectionNoun) {
+          return lowercase ? collectionNoun.toLowerCase() : collectionNoun.toUpperCase();
+        }
+        return lowercase ? 'item' : 'ITEM';
       }
 
       _notifyResize() {

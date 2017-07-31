@@ -4,70 +4,58 @@
     "101309302582172320804": {
       "collections": {
         "c001" : {
-          "name": "carpetas_papeleria",
-          "label": "Carpetas Papelería",
+          "name": "Carpetas Papeleria",
           "description": "Papelería"
         },
         "c002" : {
           "name": "clientes",
-          "label": "Clientes",
           "description": "Clientes de la empresa",
           "color": "#ee0",
           "noun": "cliente"
         },
         "c003" : {
           "name": "facturas",
-          "label": "Facturas",
           "description": "Facturas de la empresa",
           "color": "#304"
         },
         "c005" : {
-          "name": "futbolistas",
-          "label": "Futbolistas"
+          "name": "futbolistas"
         },
         "c006" : {
           "name": "sellos",
-          "label": "Sellos",
-          "description": "Mi colección de sellos"
+          "description": "Mi colección de sellos",
+          "noun": "sello"
         },
         "c007" : {
-          "name": "contabilidad_personal",
-          "label": "Contabilidad Personal",
+          "name": "Contabilidad Personal",
           "description": "Mis cuentas"
         },
         "c008" : {
-          "name": "contabilidad_empresa",
-          "label": "Contabilidad de la Empresa",
+          "name": "Contabilidad Empresa",
           "description": "Toda la contabilidad de mi empresa"
         },
         "c009" : {
-          "name": "entrenadores",
-          "label": "Entrenadores",
+          "name": "Entrenadores",
           "description": "Entrenadores de primera división"
         },
         "c011" : {
-          "name": "aviones",
-          "label": "Aviones",
+          "name": "Aviones",
           "description": "Mi colección de aviones"
         },
         "c012" : {
-          "name": "ordenadores",
-          "label": "ordenadores",
+          "name": "Ordenadores",
           "description": "Todos los ordenadores que hemos comprado"
         },
         "c013" : {
-          "name": "ciudades",
-          "label": "Ciudades",
+          "name": "Ciudades",
           "description": "Ciudades inventadas por mí"
         },
         "c014" : {
-          "name": "peliculas",
-          "label": "Películas",
+          "name": "Películas",
           "description": "Todas mis pelis"
         },
         "c016" : {
           "name": "Viajes",
-          "label": "viajes",
           "description": "Viajes que hago con mis amigos"
         }
       }
@@ -622,7 +610,7 @@
 
   "user_preferences": {
     "101309302582172320804": {
-      "primary_color": "#0000FF",
+      "primary_color": "#003333",
       "secondary_color": "#FF00FF"    
     },
     "u002": {

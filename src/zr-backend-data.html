@@ -31,9 +31,15 @@
       static get properties() {
         return {
 
-          setPath: String,
+          setPath: {
+            type: String,
+            observer: '_setPathChanged'
+          },
 
-          documentPath: String,
+          documentPath: {
+            type: String,
+            observer: '_documentPathChanged'
+          },
 
           setData: {
             type: Object,
@@ -45,35 +51,40 @@
             notify: true
           },
 
-          loading: {
+          setLoading: {
             type: Boolean,
-            notify: true
+            notify: true,
+            observer: '_setLoadingChanged'
+          },
+
+          documentLoading: {
+            type: Boolean,
+            notify: true,
+            observer: '_documentLoadingChanged'
           }
 
         }
       }
 
-      static get observers() {
-        return [
-          '_dataChanged(setData.length, documentData)',
-          '_pathChanged(setPath, documentPath)'
-        ];
+      _setPathChanged(setPath) {
+        this.setLoading = setPath ? true : false;
       }
 
-      _pathChanged(setPath, documentPath) {
-        if (setPath || documentPath) {
-          this.loading = true;
-        }
+      _documentPathChanged(documentPath) {
+        this.documentLoading = documentPath ? true : false;
       }
 
-      _dataChanged(setDataLength, documentData) {
-        if (setDataLength) {
+      _setLoadingChanged(setLoading) {
+        if (setLoading && this.setPath) {
           window.setTimeout(() => {
-            this._checkSetDataLoad(setDataLength);
+            this._checkSetDataLoad(this.setData.length);
           });
         }
-        if (documentData) {
-          const documentDataEmpty = !Object.keys(documentData).length;
+      }
+
+      _documentLoadingChanged(documentLoading) {
+        if (documentLoading && this.documentData) {
+          const documentDataEmpty = !Object.keys(this.documentData).length;
           window.setTimeout(() => {
             this._checkDocumentDataLoad(documentDataEmpty);
           });
@@ -85,8 +96,8 @@
         if (lengthTemp === lengthNow) {
           //emulate 1 second retrieving set of documents.
           window.setTimeout(() => {
-            this.loading = false;
-          }, 1000);
+            this.setLoading = false;
+          }, 1500);
         }
       }
 
@@ -94,8 +105,8 @@
         if (!documentDataEmpty) {
           //emulate 1 second retrieving document.
           window.setTimeout(() => {
-            this.loading = false;
-          }, 1000);
+            this.documentLoading = false;
+          }, 1500);
         }
       }
 
