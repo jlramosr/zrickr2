@@ -42,7 +42,7 @@
           class="list"
           as="collection">
           <template>
-            <div class$="table__item-container [[_notifyResize(index, _collections.length)]]">
+            <div class$="table__item-container [[notifyResize(index, _collections.length)]]">
               <a class="table__item" href="[[_computeUrlCollection(collection)]]">
                 <div class="table__item__detail">
                   <span class="table__item--primary-text">[[collection.name]]</span>
@@ -60,6 +60,7 @@
         <h3>You don't have any collection yet.</h3>
         <h4>Create your first one now, what would you say??</h4>
         <zr-tmpl-button
+          class="content__empty__button"
           label="CREATE MY FIRST COLLECTION"
           on-click="_newCollectionTapped"></zr-tmpl-button>
       </div>
@@ -99,6 +100,12 @@
         }
       }
 
+      notifyResize() {
+        window.setTimeout(_ => {
+          this.$.ironList.notifyResize();
+        });
+      }
+
       _newCollectionTapped() {
         this.$.newCollectionOverlay.open();
       }
@@ -110,17 +117,12 @@
 
       _computeUrlCollection(collection) {
         const collectionId = this.$.backend.getId(collection);
+        //console.log("URL COLLECTION", collectionId);
         return `/catalog/${collectionId}`;
       }
 
       _computeShowEmptyContent(loadingCollections, _collectionsLength) {
         return !loadingCollections && !_collectionsLength;
-      }
-
-      _notifyResize() {
-        window.setTimeout(_ => {
-          this.$.ironList.notifyResize();
-        });
       }
 
     }

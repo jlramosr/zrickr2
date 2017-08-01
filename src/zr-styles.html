@@ -188,12 +188,18 @@
         background-color: var(--zr-primary-color);
       }
 
-      .toolbar__info {
+      .toolbar__main {
         @apply --layout-horizontal;
         @apply --layout-center;
         @apply --layout-flex;
         overflow: hidden;
         padding: 8px;
+      }
+
+      .toolbar__info {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        overflow: hidden;
       }
 
       .toolbar__img {
@@ -233,7 +239,7 @@
       }
 
       @media (min-width: 720px) {
-        .toolbar__info {
+        .toolbar__main {
           padding: 24px;
         }
         .toolbar__actions {
@@ -241,7 +247,7 @@
         }
       }
       @media (min-width: 1024px) {
-        .toolbar__info {
+        .toolbar__main {
           padding: 42px;
         }
         .toolbar__actions {
@@ -267,6 +273,12 @@
       .content__empty__image {
         width: 96px;
         height: 96px;
+      }
+
+      .content__empty__button {
+        --padding-vertical-button: 20px;
+        --padding-horizontal-button: 26px;
+        --border-radius-button: 0px;
       }
 
       .content__page {
@@ -315,7 +327,7 @@
         margin: 0 2px;
         border: solid 1px var(--border-color-button, var(--zr-primary-color));
         border-radius: var(--border-radius-button, 30px);
-        padding: 8px 10px;
+        padding: var(--padding-vertical-button, 8px) var(--padding-horizontal-button, 10px);
         outline: 0;
         vertical-align: middle;
         box-sizing: border-box;
@@ -713,7 +725,7 @@
 
       .spinner--big {
         --paper-spinner-color: var(--spinner-color, var(--zr-app-secondary-color));
-        --paper-spinner-stroke-width: 1px;
+        --paper-spinner-stroke-width: 2px;
         position: absolute;
         z-index: -45;
         margin: auto;
@@ -737,8 +749,8 @@
         width: 100px;
         height: 100px;
         text-align: center;
-        font-weight: 300;
-        color: var(--spinner-color, var(--zr-app-secondary-color));
+        font-size: 18px;
+        color: var(--spinner-color, var(--zr-app-primary-color));
       }
     </style>
   </template>

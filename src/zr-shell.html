@@ -14,8 +14,12 @@
 
     <style include="toast-styles spinner-styles show-styles"></style>
 
-    <paper-spinner-lite class="spinner--big" active="[[!loadComplete]]"></paper-spinner-lite>
-    <span class="spinner__text" hidden$="[[loadComplete]]">Loading<br>[[appName]]</span>
+    <paper-spinner-lite 
+      class="spinner--big" 
+      active="[[!firstPaintComplete]]"></paper-spinner-lite>
+    <span class="spinner__text" hidden$="[[firstPaintComplete]]">
+      Loading<br>[[appName]]
+    </span>
 
     <app-location route="{{route}}"></app-location>
     <app-route route="[[route]]"></app-route>
@@ -55,7 +59,7 @@
 
           userStatusKnown: Boolean,
 
-          loadComplete: {
+          firstPaintComplete: {
             type: Boolean,
             value: false
           },
@@ -220,16 +224,20 @@
       }
 
       _pageLoaded() {
-        // load lazy resources after render and set `loadComplete` when done.
-        if (!this.loadComplete) {
+        // load lazy resources after render and set `firstPaintComplete` when done.
+        if (!this.firstPaintComplete) {
           Polymer.RenderStatus.afterNextRender(this._currentElement, () => {
             console.log("RENDERIZADO CURRENTELEMENT (APP O GUEST)", this._currentElement);
+            /* app or guest page has painted all it has got,
+               including its inmediate sons at the zrickr tree (not next).
+               i.e. if _currentElement is app:
+                  1. app load itself, dashboard, catalog, profile.
+                  2. firstPaint
+                  3. Dashboard, catalog or profile continue with its own load, depending on the route.
+                  3. Load Lazy-resources     
+            */
             Polymer.importHref(this.resolveUrl('lazy-resources.html'), _ => {
-              // Register service worker if supported.
-              if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js', {scope: '/'});
-              }
-              this.loadComplete = true;
+              this.firstPaintComplete = true;
             });
           });
         }

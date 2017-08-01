@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 
+<link rel="lazy-import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="zr-styles.html">
@@ -20,7 +21,7 @@
 
       <div class="toolbar" style$="[[_computeStyleToolbar(_isDarkToolbar)]]">
 
-        <div class="toolbar__info">
+        <div class="toolbar__main">
           <paper-icon-button
             icon="zr-app-icons:menu"
             class="toolbar__icon"
@@ -39,11 +40,15 @@
               icon="zr-app-icons:back-page"></paper-icon-button>
           </a>
 
-          <iron-icon class="toolbar__img" icon$="zr-app-icons:[[icon]]" hidden$="[[!icon]]"></iron-icon>
-          <span class="toolbar__title">
-            {{title}}
-          </span>
-          <paper-spinner-lite class$="spinner--small [[_computeColorSpinner(_isDarkToolbar)]]" active="{{loading}}"></paper-spinner-lite>
+          <div hidden$="[[!_showInfoPage]]" class="toolbar__info">
+            <iron-icon class="toolbar__img" icon$="zr-app-icons:[[icon]]" hidden$="[[!icon]]"></iron-icon>
+            <span class="toolbar__title">
+              {{title}}
+            </span>
+            <paper-spinner-lite
+              class$="spinner--small [[_computeColorSpinner(_isDarkToolbar)]]"
+              active="{{loading}}"></paper-spinner-lite>
+          </div>
         
         </div>
 
@@ -96,6 +101,11 @@
             type: Boolean,
             value: false,
             computed: '_computeShowMenu(menu, _drawerOpened)'
+          },
+
+          _showInfoPage: {
+            type: Boolean,
+            value: false
           },
 
           _drawerOpened: {
@@ -153,6 +163,7 @@
 
       _drawerChanged(event) {
         this._drawerOpened = event.detail.opened;
+        this._showInfoPage = true;
       }
 
       _computeShowMenu(menu, _drawerOpened) {

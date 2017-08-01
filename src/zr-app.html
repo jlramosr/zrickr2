@@ -11,10 +11,11 @@
 
 <link rel="lazy-import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="zr-styles.html">
 <link rel="import" href="zr-backend-data.html">
+<link rel="import" href="zr-styles.html">
+<!-- Eagerly loading of collections -->
+<link rel="import" href="zr-dashboard.html">
 
-<link rel="lazy-import" href="zr-dashboard.html">
 <link rel="lazy-import" href="zr-profile.html">
 <link rel="lazy-import" href="zr-catalog.html">
 <link rel="lazy-import" href="zr-page-404.html">
@@ -115,6 +116,7 @@
         <iron-pages selected="[[_page]]" attr-for-selected="name" fallback-selection="page-404">
 
           <zr-dashboard
+            id="dashboard"
             name="dashboard"
             app-name="[[appName]]"
             user-id="[[user.id]]"
@@ -232,6 +234,8 @@
       _routeChanged(route) {
         if (!this._checkActiveRoute(route)) { return; }
 
+        this.$.dashboard.notifyResize();
+
         const path = route.path.split('/');
         var page = path[1];
         const restPath = path[2] ? path[2].split('/') : null;
@@ -254,6 +258,7 @@
 
         // update page.
         this._page = page;
+        document.title = this.appName + ' - ' + page;
       }
 
       _pageChanged(_page) {
