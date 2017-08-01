@@ -1,6 +1,36 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "collection_items": {
+      "$collection_id": {
+      	"items": {
+					".read": "root.child('/user_collections/' + auth.uid + '/collections/' + $collection_id).exists()",
+    			".write": "root.child('/user_collections/' + auth.uid + '/collections/' + $collection_id).exists()"
+      	}
+      }
+    },
+
+    "collection_users": {
+      "$collection_id": {
+				".read": "true",
+    		".write": "true"
+      }
+    },
+
+    "user_collections": {
+      "$user_id": {
+      	"collections": {
+					".read": "$user_id === auth.uid",
+    			".write": "$user_id === auth.uid"
+      	}
+      }
+    },
+
+    "user_preferences": {
+      "$user_id": {
+				".read": "$user_id === auth.uid",
+    		".write": "$user_id === auth.uid"
+      }
+    }
+
   }
 }

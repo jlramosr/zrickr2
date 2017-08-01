@@ -1,7 +1,7 @@
 {
 
   "user_collections": {
-    "101309302582172320804": {
+    "YfVKcOqAatZH4bnBtXQYkCZohGF2": {
       "collections": {
         "c001" : {
           "name": "Carpetas Papeleria",
@@ -518,13 +518,13 @@
   "collection_users": {
     "c001": {
       "users": {
-        "101309302582172320804": true,
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true,
         "u002": true
       }
     },
     "c002": {
       "users": {
-        "101309302582172320804": true,
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true,
         "u003": true
       }
     },
@@ -536,12 +536,12 @@
     },
     "c004": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c005": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c006": {
@@ -551,40 +551,40 @@
     },
     "c007": {
       "users": {
-        "101309302582172320804": true,
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true,
         "u002": true
       }
     },
     "c008": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c009": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c010": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c011": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c012": {
       "users": {
-        "101309302582172320804": true,
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true,
         "u002": true,
         "u003": true
       }
     },
     "c013": {
       "users": {
-        "101309302582172320804": true
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true
       }
     },
     "c014": {
@@ -601,7 +601,7 @@
     },
     "c016": {
       "users": {
-        "101309302582172320804": true,
+        "YfVKcOqAatZH4bnBtXQYkCZohGF2": true,
         "u003": true
       }
     }
@@ -609,7 +609,7 @@
 
 
   "user_preferences": {
-    "101309302582172320804": {
+    "YfVKcOqAatZH4bnBtXQYkCZohGF2": {
       "primary_color": "#003333",
       "secondary_color": "#FF00FF"    
     },
@@ -617,7 +617,7 @@
       "primary_color": "#000000"  
     },
     "u003": {
-      "primary_color": "#00FF00" 
+      "primary_color": "#00FF00"
     }
   },
 
@@ -630,6 +630,10 @@
         }
       }
     }
+  },
+
+  "user_tokens": {
+      
   }
 
 }

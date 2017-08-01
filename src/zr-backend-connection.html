@@ -12,7 +12,8 @@
       name="zrickr2"
       auth-domain="zrickr2.firebaseapp.com"
       database-url="https://zrickr2.firebaseio.com"
-      api-key="AIzaSyAJ4SNDjzqdn9BOuqqdJdgxoK7WhFjFxQM"></firebase-app>
+      api-key="AIzaSyAJ4SNDjzqdn9BOuqqdJdgxoK7WhFjFxQM"
+      messaging-sender-id="942748473019"></firebase-app>
 
     <firebase-auth
       id="auth"
@@ -72,12 +73,11 @@
 
       _computeUser(_user) {
         if (!_user) { return null; }
-        const userProviderData = _user.providerData[0];
         return {
-          id: userProviderData.uid,
-          name: userProviderData.displayName,
-          email: userProviderData.email,
-          photo: userProviderData.photoURL
+          id: _user.uid,
+          name: _user.displayName,
+          email: _user.email,
+          photo: _user.photoURL
         };
       }
 

@@ -1,0 +1,65 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">   
+<link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">   
+
+<dom-module id="zr-subscription">
+  <template>
+
+    <firebase-messaging
+      id="messaging"
+      app-name="zrickr2"
+      last-message="{{lastMessage}}"
+      token="{{token}}"
+      on-message="_handleMessage"></firebase-messaging>
+
+    <firebase-document
+      app-name="zrickr2"
+      path="/user_tokens/[[userId]]/token"
+      data="[[token]]"></firebase-document>
+
+    <button on-click="_buttonTapped">SUBSCRIBE</button>
+
+  </template>
+
+  <script>
+
+    class ZRSubscription extends Polymer.Element {
+
+      static get is() { return 'zr-subscription'; }
+
+      static get properties() {
+        return {
+
+          userId: String,
+
+          lastMessage: {
+            type: Object,
+            observer: '_lastMessageChanged'
+          }
+
+        }
+      }
+
+      _buttonTapped() {
+        this.$.messaging.requestPermission().then(_ => {
+          // permission was granted
+        }, err => {
+          // permission was denied
+        });
+      }
+
+      _handleMessage() {
+        //console.log("_handleMessage", arguments);
+      }
+
+      _lastMessageChanged(lastMessage) {
+        //console.log("_lastMessageChanged", lastMessage);
+      }
+
+    }
+
+    window.customElements.define(ZRSubscription.is, ZRSubscription);
+
+  </script>
+</dom-module>
+

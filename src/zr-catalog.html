@@ -95,6 +95,24 @@
         };
       }
 
+      static get observers() {
+        return [
+          '_collectionInfoChanged(collectionId, loadingCollectionInfo, collectionInfo)',
+        ];
+      }
+
+      _collectionInfoChanged(collectionId, loadingCollectionInfo, collectionInfo) {
+        //console.log("ESTUDIANDO", collectionId, loadingCollectionInfo, collectionInfo);
+        if (collectionId && collectionInfo) {
+          if (!collectionInfo.name && loadingCollectionInfo) {
+            //console.log("NO EXISTE LA COLECCION");
+          }
+          if (collectionInfo.name && !loadingCollectionInfo) {
+            //console.log("EXISTE LA COLECCION");
+          }
+        }
+      }
+
       _computeCollectionInfoPath(userId, collectionId) {
         return userId && collectionId ?
           `/user_collections/${userId}/collections/${collectionId}` : null;
