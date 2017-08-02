@@ -1,0 +1,181 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="zr-styles.html">
+
+<dom-module id="zr-tmpl-form-item">
+  <template>
+
+    <style include="show-styles">
+      /*
+        https://css-tricks.com/snippets/css/complete-guide-grid/
+        grid-column: span 3         fills next 3 free squares.
+        grid-column: 1 / 3          fills from square number 1 to square number 3.
+        grid-column: span 1 / 3     fills 1 square from square number 3 from right to left.
+        grid-column: 1 / span 3     fills 3 squares from square number 1 from left to right.
+      */
+
+      :host {
+        background: transparent;
+        padding: 6px;
+        grid-column: span var(--cols);
+        grid-row: span var(--rows);
+      }
+
+      :host([col-start]:not([col-end])) {
+        grid-column: var(--col-start) / span var(--cols);
+      }
+
+      :host(:not([col-start])[col-end]) {
+        grid-column: span var(--cols) / var(--col-end);
+      }
+
+      :host([col-start][col-end]) {
+        grid-column: var(--col-start) / var(--col-end);
+      }
+
+      :host([row-start]:not([row-end])) {
+        grid-row: var(--row-start) / span var(--rows);
+      }
+
+      :host(:not([row-start])[row-end]) {
+        grid-row: span var(--rows) / var(--row-end);
+      }
+
+      :host([row-start][row-end]) {
+        grid-row: var(--row-start) / var(--row-end);
+      }
+
+      @media (max-width: 720px) { 
+        :host(:not([small-col-start]):not([small-col-end])) {
+          grid-column: span var(--small-cols);
+        }
+
+        :host([small-col-start]:not([small-col-end])) {
+          grid-column: var(--small-col-start) / span var(--small-cols);
+        }
+
+        :host(:not([small-col-start])[small-col-end]) {
+          grid-column: span var(--small-cols) / var(--small-col-end);
+        }
+
+        :host([small-col-start][small-col-end]) {
+          grid-column: var(--small-col-start) / var(--small-col-end);
+        }
+
+      }
+
+    </style>
+
+    <slot></slot>
+
+  </template>
+
+  <script>
+
+    class ZRTmplFormItem extends Polymer.Element {
+
+      static get is() { return 'zr-tmpl-form-item'; }
+
+      static get properties() {
+        return {
+
+          rows: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          rowStart: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          rowEnd: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          cols: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          colStart: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          colEnd: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          smallCols: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          smallColStart: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          smallColEnd: {
+            type: Number,
+            reflectToAttribute: true
+          },
+
+          formCols: Number,
+
+          smallScreen: {
+            type: Boolean,
+            reflectToAttribute: true
+          }
+        
+        }
+
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.rows = this._setDefaultValue(this.rows, 1000, 1);
+        this.rowStart = this._setDefaultValue(this.rowStart, 1000, undefined);
+        this.rowEnd = this._setDefaultValue(this.rowEnd, 1000, undefined);
+
+        this.cols = this._setDefaultValue(this.cols, this.formCols, this.formCols);
+        this.colStart = this._setDefaultValue(this.colStart, this.formCols, undefined);
+        this.colEnd = this._setDefaultValue(this.colEnd, this.formCols, undefined);
+
+        this.smallCols = this._setDefaultValue(this.smallCols, this.formCols, this.formCols);
+        this.smallColStart = this._setDefaultValue(this.smallColStart, this.formCols, undefined);
+        this.smallColEnd = this._setDefaultValue(this.smallColEnd, this.formCols, undefined);
+
+        this.updateStyles({
+          '--rows': this.rows,
+          '--row-start': this.rowStart,
+          '--row-end': this.rowEnd + 1,
+          '--cols': this.cols,
+          '--col-start': this.colStart,
+          //grid-column: 4 / 5 only fills square number 4
+          //grid-column: 4 / 5+1 fills number 4 and 5
+          '--col-end': this.colEnd + 1,
+          '--small-cols': this.smallCols,
+          '--small-col-start': this.smallColStart,
+          '--small-col-end': this.smallColEnd + 1,
+          '--form-cols': this.formCols
+        });
+      }
+
+      _setDefaultValue(propertyValue, max, defaultValue) {
+        if (!propertyValue || propertyValue < 1 || propertyValue > max) {
+          return defaultValue;
+        }
+        return propertyValue;
+      }
+
+    }
+
+    window.customElements.define(ZRTmplFormItem.is, ZRTmplFormItem);
+
+  </script>
+</dom-module>

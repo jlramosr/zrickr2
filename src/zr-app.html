@@ -165,10 +165,7 @@
 
           user: Object,
 
-          settings: {
-            type: Object,
-            observer: '_settingsChanged'
-          },
+          settings: Object,
 
           loadingSettings: Boolean,
 
@@ -189,6 +186,12 @@
           mediumScreen: Boolean
 
         };
+      }
+
+      static get observers() {
+        return [
+          '_settingsChanged(loadingSettings, settings)'
+        ]
       }
 
       connectedCallback() {
@@ -270,15 +273,16 @@
         Polymer.importHref(resolvedPageUrl, null, null, true);
       }
 
-      _settingsChanged(settings) {
-        if (settings) {
+      _settingsChanged(loadingSettings, settings) {
+        //if (!loadingSettings && settings) {
+        if (settings.primary_color) {
           let styleOverrided = document.createElement('style', 'custom-style');
           styleOverrided.textContent = 
             `:root {
               ${settings.primary_color ? '--zr-primary-color:' + settings.primary_color + ';' : ''}
               ${settings.secondary_color ? '--zr-secondary-color:' + settings.secondary_color + ';' : ''}
             }`;
-          document.body.appendChild(styleOverrided);
+          document.body.insertBefore(styleOverrided, document.body.firstChild);
         }
       }
 

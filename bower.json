@@ -24,7 +24,7 @@
     "paper-spinner": "PolymerElements/paper-spinner#2.0-preview",
     "paper-tabs": "PolymerElements/paper-tabs#2.0-preview",
     "paper-toast": "PolymerElements/paper-toast#2.0-preview",
-    "polymer": "Polymer/polymer#2.0.0-rc.3",
+    "polymer": "Polymer/polymer#^2.0.0-rc.7",
     "polymerfire": "firebase/polymerfire#2.0-preview"
   },
   "resolutions": {

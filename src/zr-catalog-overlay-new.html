@@ -3,6 +3,7 @@
 <link rel="import" href="zr-styles.html">
 <link rel="import" href="zr-tmpl-button.html">
 <link rel="import" href="zr-tmpl-page-layout.html">
+<link rel="import" href="zr-tmpl-form.html">
 
 <dom-module id="zr-catalog-overlay-new">
   <template>
@@ -32,14 +33,13 @@
 
       <div id="content" slot="content" class="content__page">
         
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
-        CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>CREATE<br>
+        <zr-tmpl-form
+          data="[[data]]"
+          model="[[model]]"
+          columns="12"
+          small-screen="[[smallScreen]]"
+          medium-screen="[[mediumScreen]]"></zr-tmpl-form>
+
       </div>
 
     </zr-tmpl-page-layout>
@@ -53,6 +53,23 @@
 
       static get properties() {
         return {
+
+          model: {
+            type: Array,
+            value: _ => [
+              {name: 'name', type: 'string', label: 'Name', icon: 'domain', required: true,
+                formView: { showIcon: false, rowStart: 1, colStart: 4, cols: 9 } 
+              },
+              {name: 'description', type: 'string', label: 'Description', icon: 'domain', required: true,
+                formView: { showIcon: false, rowStart: 2, rows: 2, colStart: 4, cols: 9 } 
+              },
+              {name: 'image', type: 'image', label: 'Image', icon: 'domain', required: true,
+                formView: { showIcon: false, showLabel: false, rowStart: 1, rows: 3, colStart: 1, cols: 3 } 
+              }
+            ]
+          },
+
+          data: Object,
 
           smallScreen: Boolean,
 

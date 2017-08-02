@@ -1,0 +1,307 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+
+<link rel="import" href="zr-styles.html">
+<link rel="import" href="zr-common.html">
+<link rel="import" href="zr-tmpl-form-item.html">
+
+<dom-module id="zr-tmpl-form">
+  <template>
+
+    <style include="show-styles">
+      :host {
+        height: 100vh;
+        padding: 0;
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(var(--columns), auto);
+        grid-template-rows: repeat(auto-fill, 60px);
+        grid-gap: 0px 0px;
+        justify-items: stretch;
+        align-items: stretch;
+      }
+
+      .form-item__container {
+        position: relative
+      }
+
+      .form-item__icon {
+        position: absolute;
+        top: 28px;
+        left: 0;
+        color: var(--rmerp-primary-color);
+        opacity: 0.6;
+      }
+
+      .icon--without-label {
+        top: 7px;
+      }
+
+      .form-item__item {
+        outline: none;
+        --paper-input-container-color: #111;
+        --paper-input-container-input-color: var(--rmerp-primary-dark-color);
+        --paper-input-container-focus-color: var(--rmerp-secondary-color);
+        --paper-input-container-input: {
+          font-size: 14px;
+        }
+        --paper-input-container-label: {
+          font-size: 16px;
+        }
+        --paper-input-container-disabled: {
+          opacity: 0.66;
+          color: var(--rmerp-primary-soft-color);
+        }
+        --paper-input-container-underline-disabled: {
+          background: var(--rmerp-primary-soft-color);
+          border: 1px solid var(--rmerp-primary-soft-color);
+        } 
+      }
+
+      .item--with-icon {
+        --paper-input-container-input: {
+          padding-left: 14px;
+        }
+      }
+
+      .item--input {
+      }
+
+      .item--textarea {
+        @apply --layout-fit;
+      }
+
+      .item--tabs {
+        @apply --layout-vertical;
+        height: 100%;
+        box-shadow: 0 4px 6px 1px rgba(0, 0, 0, 0.14),
+                    0 2px 4px 1px rgba(0, 0, 0, 0.12),
+                    0 3px 2px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .item--image {
+        border: 1px solid #000;
+        width: 100%;
+        height: 100%;
+      }
+
+      .tabs__tabs {
+        --paper-tabs-selection-bar-color: var(--rmerp-secondary-color);
+        --paper-tabs-content: {
+          background: var(--rmerp-primary-light-color);
+        }
+      }
+
+      .tabs__pages {
+        @apply --layout-flex;
+        overflow: auto;
+      }
+
+      .tabs__tab {
+      }
+
+      .pages__form {
+        padding: 0 8px;
+        height: 100%;
+      }
+    </style>
+
+    <template is="dom-repeat" items="{{_fields}}" as="field">
+
+      <zr-tmpl-form-item
+        rows="[[field.formView.rows]]"
+        row-start="[[field.formView.rowStart]]"
+        row-end="[[field.formView.rowEnd]]"
+        cols="[[field.formView.cols]]"
+        col-start="[[field.formView.colStart]]"
+        col-end="[[field.formView.colEnd]]"
+        small-cols="[[field.formView.smallCols]]"
+        small-col-start="[[field.formView.smallColStart]]"
+        small-col-end="[[field.formView.smallColEnd]]"
+        small-screen="[[smallScreen]]"
+        form-cols="[[columns]]"
+        hidden$="[[!field.formView]]">
+
+        <template is="dom-if" if="[[_isInput(field.type)]]">
+          <div class="form-item__container">
+            <paper-input
+              always-float-label
+              no-label-float$="[[_computeHideLabel(field.formView)]]"
+              class$="form-item__item item--input [[_computeClassInputWithIcon(field.icon, field.formView)]]"
+              required="[[field.required]]"
+              disabled="[[field.readOnly]]"
+              label="[[field.label]]"
+              value="{{_getValue(data, field.name)}}"></paper-input>
+            <iron-icon
+              icon$="rmerp-icons:[[field.icon]]"
+              class$="form-item__icon [[_computeClassIcon(field.formView)]]"
+              hidden$="[[_computeHideIcon(field.icon, field.formView)]]"></iron-icon>
+          </div>
+        </template>
+
+        <template is="dom-if" if="[[_isSelect(field.type)]]">
+          <paper-input always-float-label="" class="form-item__item item--input" required="[[field.required]]" disabled="[[field.readOnly]]" label="[[field.label]]" value="{{_getValue(data, field.name)}}"></paper-input>
+        </template>
+
+        <template is="dom-if" if="[[_isText(field.type)]]">
+          <div class="form-item__container">
+            <paper-textarea always-float-label="" class="form-item__item item--textarea" rows="[[field.formView.rows]]" max-rows="[[field.formView.rows]]" required="[[field.required]]" disabled="[[field.readOnly]]" label="[[field.label]]" value="{{_getValue(data, field.name)}}"></paper-textarea>
+          </div>
+        </template>
+
+        <template is="dom-if" if="[[_isTab(field.type)]]">
+          <div class="form-item__item item--tabs">
+            <paper-tabs selected="{{tabSelected}}" id="paperTabs" class="tabs__tabs">
+              <template is="dom-repeat" items="{{field.tabs}}" as="tab">
+                <paper-tab class="tabs__tab">[[tab.label]]</paper-tab>
+              </template>
+            </paper-tabs>
+
+            <iron-pages selected="{{tabSelected}}" class="tabs__pages">
+              <template is="dom-repeat" items="{{field.tabs}}" as="tab">
+
+                <rmerp-tmpl-form class="pages__form" data="[[data]]" model="[[tab.items]]" columns="[[columns]]" small-screen="[[smallScreen]]" medium-screen="[[mediumScreen]]"></rmerp-tmpl-form>
+
+              </template>
+            </iron-pages>
+          </div>
+        </template>
+
+        <template is="dom-if" if="[[_isImage(field.type)]]">
+          <div class="form-item__item item--image">
+          </div>
+        </template>
+
+      </zr-tmpl-form-item>
+
+    </template>
+
+  </template>
+
+  <script>
+
+    class ZRTmplForm extends Polymer.Element {
+
+      static get is() { return 'zr-tmpl-form'; }
+
+      static get properties() {
+        return {
+
+          data: Object,
+
+          model: Array,
+
+          _fields: {
+            type: Array,
+            computed: '_computeFields(model)'
+          },
+
+          tabSelected: {
+            type: Number,
+            value: 0
+          },
+
+          editMode: {
+            type: Boolean,
+            value: true
+          },
+
+          smallScreen: Boolean,
+
+          mediumScreen: Boolean,
+
+          columns: Number,
+
+          maxColumns: {
+            type: Number,
+            value: 1000,
+            readOnly: true
+          }
+        
+        }
+
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        if (!this.columns || this.columns < 1 || this.columns > this.maxColumns) {
+          this.columns = 10;
+        }
+
+        this.updateStyles({
+          '--columns': this.columns
+        });
+
+      }
+
+      _computeFields(model) {
+        let _fields = ZRCommon.cloneObject(model);
+        //https://gist.github.com/chad3814/2924672.
+        for (let itemIndex = _fields.length - 1; itemIndex >= 0; itemIndex -= 1) {
+          let itemModel = _fields[itemIndex];
+          const itemTabName = itemModel.formView.tab;
+          if (itemTabName) { 
+
+            //item goes within a tab.
+            _fields.forEach(itemModelSearch => {
+
+              if (itemModelSearch.type == 'tab') {
+                //one tab container founded.
+                const tabContainer = itemModelSearch;
+                tabContainer.tabs.forEach(tab => {
+
+                  if (tab.name == itemTabName) {
+                    //the tab container founded corresponds with the item tab.
+                    if (!tab.items) {
+                      tab.items = [];
+                    }
+                    tab.items.push(itemModel);
+                    _fields.splice(itemIndex, 1);
+                  }
+
+                });
+              } 
+            }); 
+          }
+        }
+        return _fields;
+      }
+
+      _getValue(data, field){
+        if (!data) return '';
+        return data[field];
+      }
+
+      _computeHideIcon(icon, formView) {
+        return !icon || formView.showIcon === false;
+      }
+
+      _computeClassInputWithIcon(icon, formView) {
+        return (icon && formView.showIcon !== false) ? 'item--with-icon' : '';
+      }
+
+      _computeClassIcon(formView) {
+        return formView.showLabel === false ? 'icon--without-label' : '';
+      }
+
+      _computeHideLabel(formView) {
+        return formView.showLabel === false;
+      }
+
+      _isInput(type) { return type === 'string' || type === 'number'; }
+      _isText(type) { return type === 'text'; }
+      _isSelect(type) { return type === 'select'; }
+      _isTab(type) { return type === 'tab'; }
+      _isImage(type) { return type === 'image'; }
+
+    }
+
+    window.customElements.define(ZRTmplForm.is, ZRTmplForm);
+
+  </script>
+</dom-module>
