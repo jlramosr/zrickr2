@@ -8,6 +8,7 @@
 <link rel="import" href="zr-styles.html">
 <link rel="import" href="zr-common.html">
 <link rel="import" href="zr-tmpl-form-item.html">
+<link rel="import" href="zr-tmpl-form-item-image.html">
 
 <dom-module id="zr-tmpl-form">
   <template>
@@ -129,7 +130,9 @@
         <template is="dom-if" if="[[_isInput(field.type)]]">
           <div class="form-item__container">
             <paper-input
-              always-float-label
+              always-float-label=""
+              char-counter="[[field.size]]"
+              maxlength="[[field.size]]"
               no-label-float$="[[_computeHideLabel(field.formView)]]"
               class$="form-item__item item--input [[_computeClassInputWithIcon(field.icon, field.formView)]]"
               required="[[field.required]]"
@@ -144,12 +147,26 @@
         </template>
 
         <template is="dom-if" if="[[_isSelect(field.type)]]">
-          <paper-input always-float-label="" class="form-item__item item--input" required="[[field.required]]" disabled="[[field.readOnly]]" label="[[field.label]]" value="{{_getValue(data, field.name)}}"></paper-input>
+          <paper-input
+            always-float-label=""
+            class="form-item__item item--input"
+            required="[[field.required]]"
+            disabled="[[field.readOnly]]"
+            label="[[field.label]]"
+            value="{{_getValue(data, field.name)}}"></paper-input>
         </template>
 
         <template is="dom-if" if="[[_isText(field.type)]]">
           <div class="form-item__container">
-            <paper-textarea always-float-label="" class="form-item__item item--textarea" rows="[[field.formView.rows]]" max-rows="[[field.formView.rows]]" required="[[field.required]]" disabled="[[field.readOnly]]" label="[[field.label]]" value="{{_getValue(data, field.name)}}"></paper-textarea>
+            <paper-textarea
+              always-float-label=""
+              class="form-item__item item--textarea"
+              rows="[[field.formView.textRows]]"
+              max-rows="[[field.formView.textRows]]"
+              required="[[field.required]]"
+              disabled="[[field.readOnly]]"
+              label="[[field.label]]"
+              value="{{_getValue(data, field.name)}}"></paper-textarea>
           </div>
         </template>
 
@@ -172,8 +189,9 @@
         </template>
 
         <template is="dom-if" if="[[_isImage(field.type)]]">
-          <div class="form-item__item item--image">
-          </div>
+          <zr-tmpl-form-item-image
+            image="{{field.image}}"
+            max-size="4"></zr-tmpl-form-item-image>
         </template>
 
       </zr-tmpl-form-item>

@@ -1,0 +1,142 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-storage-script.html">
+
+<link rel="import" href="zr-common.html">
+
+<dom-module id="zr-backend-storage">
+
+  <template>
+
+    <firebase-document
+      id="document"
+      app-name="zrickr2"
+      path="[[path]]"></firebase-document>
+
+  </template>
+
+  <script>
+
+    class ZRBackendStorage extends Polymer.Element {
+
+      static get is() { return 'zr-backend-storage'; }
+
+      static get properties() {
+        return {
+
+          path: String,
+
+          /*
+           * Percent of progress of an action. 
+           */
+          progress: {
+            type: Number,
+            notify: true,
+            value: 0
+          },
+
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: false
+          }
+
+        }
+      }
+
+      /**
+        * Upload a file to storage.
+        *
+        * If the process executes successfully, it fires a event with a object with the file url.
+        * ({ "url": <new_url> })
+        *
+        * @param {Object} The file to upload.
+        * @param {String} The type of the field to upload and the root folder where file will save.
+        * @param {Number} The max size of the file in MB.
+        * @param {String} The name of the file.
+        */
+      uploadFile(file, type, maxSize, name) {
+        this.uploadUrl = null;
+        const metadata = {
+          'name': name || file.name,
+          'type': file.type || 'other',
+          'size': file.size || 0,
+        };
+        const mainType = file.type.split('/')[0];
+        if (Boolean(type) && mainType != type) {
+          ZRCommon.showMessage(
+            `UPLOAD ERROR: File selected is not a ${type}`, 
+            'error'
+          );
+          return;
+        }
+        if (Boolean(maxSize) && file.size > maxSize * 1000000) {
+          ZRCommon.showMessage(
+            `UPLOAD ERROR: File selected is too large (MAX ${maxSize} MBs)`, 
+            'error'
+          );
+          return;
+        }
+        const storageRef = this.$.document.app.storage().ref();
+        let uploadTask = storageRef.child(`${mainType}/${metadata.name}`).put(file, metadata);
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on('state_changed', snapshot => {
+          // Observe state change events such as progress, pause, and resume
+         this.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+         this.loading = true;
+         switch (snapshot.state) {
+          case firebase.storage.TaskState.PAUSED: // or 'paused'
+            break;
+          case firebase.storage.TaskState.PROGRESS: // or 'progress'
+            break;
+          case firebase.storage.TaskState.RUNNING: // or 'running'
+            break;
+          }
+        }, error => {
+          switch (error.code) {
+            case 'storage/unauthorized':
+              ZRCommon.showMessage(
+                'UPLOAD ERROR: User doesn\'t have permission to access the object', 
+                'error'
+              );
+              break;
+            case 'storage/canceled':
+              ZRCommon.showMessage(
+                'UPLOAD ERROR: User canceled the upload', 
+                'error'
+              );
+              break;
+            case 'storage/unknown':
+              ZRCommon.showMessage(
+                'UPLOAD ERROR: Unknown error occurred', 
+                'error'
+              );
+              break;
+          }      
+        }, _ => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          const uploadUrl = uploadTask.snapshot.downloadURL;
+          this.dispatchEvent(new CustomEvent('file-uploaded', { 
+            'detail': { 'url': uploadUrl }
+          }));
+          this.progress = 0;
+          this.loading = false;
+        });
+      }
+
+      deleteFile(urlFile) {
+
+      }
+
+    }
+
+    window.customElements.define(ZRBackendStorage.is, ZRBackendStorage);
+
+  </script>
+</dom-module>
+
+

@@ -1,0 +1,249 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="lazy-import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="lazy-import" href="../bower_components/iron-image/iron-image.html">
+<link rel="lazy-import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+
+<link rel="import" href="zr-styles.html">
+<link rel="import" href="zr-icons.html">
+<link rel="import" href="zr-backend-storage.html">
+
+<dom-module id="zr-tmpl-form-item-image">
+  <template>
+
+    <style include="show-styles">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        padding: 8px;
+      }
+
+      .container {
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        position: relative;
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        outline: none;
+        cursor: pointer;
+      }
+
+      .container:hover {
+        opacity: 0.7;
+      }
+
+      .loading {
+        --paper-spinner-stroke-width: 2px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .photo {
+        --iron-image-width: 100%;
+        --iron-image-height: 100%;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        opacity: 0.9; 
+      }
+
+      .icon {
+        --iron-icon-fill-color: var(--app-secondary-color);
+        opacity: 0.5;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .icon--add {
+        --iron-icon-width: 50%;
+        --iron-icon-height: 50%;
+      }
+
+      .icon--delete {
+        --iron-icon-width: 20px;
+        --iron-icon-height: 20px;
+        display: none;
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+      }
+    </style>
+
+    <zr-backend-storage
+      id="storage"
+      path="/images"
+      progress="{{progress}}"
+      loading="{{loading}}"></zr-backend-storage>
+
+    <input 
+      type="file"
+      id="inputFile"
+      accept="image/*"
+      hidden
+      on-change="_handleFiles"
+      tabindex="-1"></input>
+    <div class="container">
+      <iron-image
+        on-tap="_openFileSelectionTapped"
+        class="photo"
+        loaded="{{imageLoaded}}"
+        src="[[image]]"
+        sizing="contain"
+        hidden$="[[!_computeShowImage(loading, image)]]"></iron-image>
+      <iron-icon
+        icon="zr-app-icons:add-photo"
+        on-tap="_openFileSelectionTapped"
+        class="icon icon--add"
+        hidden$="[[!_computeShowAddImage(loading, image)]]"></iron-icon>
+      <paper-spinner-lite
+        class="loading"
+        active="[[showLoading]]"
+        on-tap="_openFileSelectionTapped"></paper-spinner-lite>
+    </div>
+    <iron-icon
+      icon="delete"
+      class="icon icon--delete"
+      id="deleteImageButton"
+      on-tap="_deleteImageTapped"></iron-icon>
+
+  </template>
+
+  <script>
+    class ZRTmplFormItemImage extends Polymer.Element {
+
+      static get is() { return 'zr-tmpl-form-item-image'; }
+
+      static get properties() {
+        return {
+
+          image: {
+            type: String,
+            value: null,
+            notify: true
+          },
+
+          loading: {
+            type: Boolean,
+            observer: '_loadingChanged'
+          },
+
+          progress: Number,
+
+          /*
+          * Maximum size of the file in MBs
+          */
+          maxSize: {
+            type: Number,
+            value: 5
+          },
+
+          imageLoaded: {
+            type: Boolean,
+            observer: '_imageLoadedChanged'
+          },
+
+          showLoading: {
+            type: Boolean,
+            value: false
+          }
+
+        }
+      }
+
+      /**
+        * Fired when user tap on add photo button
+        */
+      _openFileSelectionTapped() {
+        const inputFile = this.$.inputFile;
+        if (inputFile) {
+          inputFile.click();
+        }
+      }
+
+      /**
+        * Fired when user select a file to upload as photo.
+        *
+        * Add url string to image property.
+        */
+      _handleFiles(event) {
+        //console.log("FILE START", event.target.files[0]);
+        if (event.target.files) {
+          //it has been selected at least one file
+          const files = event.target.files;
+          const numFiles = event.target.files.length;
+          //console.log("FILE IN", files[0]);
+          const urlFile = this.$.storage.uploadFile(files[numFiles-1], 'image', this.maxSize, files[numFiles-1].name);
+          this.$.storage.addEventListener('file-uploaded', event => {
+            const urlFile = event.detail.url; 
+            this.set('image', urlFile);
+          });
+        }
+      }
+
+      /**
+        * Fired when user delete image.
+        *
+        * Delete url string from image property.
+        */
+      _deleteImageTapped() {
+        this.$.inputFile.value = '';
+        this.$.storage.deleteFile(this.image);
+        this.set('image', null);
+      }
+
+      /**
+        * Fired when loading image value changes.
+        *
+        * Show loading progress.
+        *
+        * @param {Boolean} True when image is loading, false in other case.
+        */
+      _loadingChanged(loading) {
+        if (loading) {
+          this.showLoading = true;
+        }
+      }
+
+      /**
+        * Fired when indicator of image loaded changes.
+        *
+        * If the image is loaded succesfully, remove progress indicator and show delete image button.
+        * If the image is not loaded, remove delete image button.
+        *
+        * @param {Boolean} True when image is loaded, false in other case.
+        */
+      _imageLoadedChanged(imageLoaded) {
+        if (imageLoaded) {
+          if (this.showLoading)
+            this.showLoading = false;
+          this.$.deleteImageButton.style.display='block';
+        }
+        else {
+          this.$.deleteImageButton.style.display='none';
+        }
+      }
+
+      _computeShowImage(loading, image) {
+        return !loading && image;
+      }
+
+      _computeShowAddImage(loading, image) {
+        return !loading && !image;
+      }
+      
+    }
+    
+    window.customElements.define(ZRTmplFormItemImage.is, ZRTmplFormItemImage);
+
+  </script>
+</dom-module>
